@@ -1,6 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Firebase App (core) -->
+<script type="module">
+  // Import Firebase functions
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
+    from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+    authDomain: "lexorasite.firebaseapp.com",
+    projectId: "lexorasite",
+    storageBucket: "lexorasite.firebasestorage.app",
+    messagingSenderId: "547338465904",
+    appId: "1:547338465904:web:438631173029042cfdbab5",
+    measurementId: "G-SCX7CQDFYR"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
+
+  // Signup function
+  window.signup = function() {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        document.getElementById('signup-message').innerText = "Signup successful!";
+        console.log(userCredential.user);
+      })
+      .catch((error) => {
+        document.getElementById('signup-message').innerText = error.message;
+      });
+  }
+
+  // Login function
+  window.login = function() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        document.getElementById('login-message').innerText = "Login successful!";
+        console.log(userCredential.user);
+      })
+      .catch((error) => {
+        document.getElementById('login-message').innerText = error.message;
+      });
+  }
+
+  // Track login state
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User logged in:", user.email);
+    } else {
+      console.log("No user logged in");
+    }
+  });
+
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexora – Earn Smarter</title>
@@ -72,7 +136,17 @@
     </style>
 </head>
 <body>
+<h2>Sign Up</h2>
+<input type="email" id="signup-email" placeholder="Email">
+<input type="password" id="signup-password" placeholder="Password">
+<button onclick="signup()">Sign Up</button>
+<p id="signup-message"></p>
 
+<h2>Login</h2>
+<input type="email" id="login-email" placeholder="Email">
+<input type="password" id="login-password" placeholder="Password">
+<button onclick="login()">Login</button>
+<p id="login-message"></p>
     <!-- NAVBAR -->
     <div class="navbar">
         <div style="color:gold; font-size:20px; font-weight:bold;">LEXORA</div>
