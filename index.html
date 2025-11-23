@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexora – Earn Smarter</title>
+
+    <!-- STYLES -->
     <style>
         body {
             margin: 0;
@@ -61,6 +63,43 @@
             text-decoration: none;
         }
 
+        /* LOGIN SECTION */
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid gold;
+            border-radius: 8px;
+            background-color: black;
+            color: white;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            color: gold;
+        }
+
+        .login-container input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background: gold;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login-container p {
+            text-align: center;
+            color: white;
+        }
+
         /* FOOTER */
         .footer {
             text-align: center;
@@ -83,7 +122,6 @@
             <a href="earning-plan.html">Earning Plan</a>
             <a href="join-us.html">Join Us</a>
             <a href="contact.html">Contact</a>
-            <a href="login.html">Login</a>
         </div>
     </div>
 
@@ -91,13 +129,169 @@
     <div class="hero">
         <h1>Earn Money the Smart Way</h1>
         <p>Lexora connects users with surveys, tasks, and rewards. Start your earning journey today with our trusted platform.</p>
-        <a class="btn" href="signup.html">Get Started</a>
+        <a class="btn" href="#login">Get Started</a>
+    </div>
+
+    <!-- LOGIN SECTION -->
+    <div id="login" class="login-container">
+        <h2>Login via Email Link</h2>
+        <input type="email" id="login-email" placeholder="Enter your email">
+        <button onclick="sendLoginLink()">Send Login Link</button>
+        <p id="login-message"></p>
     </div>
 
     <!-- FOOTER -->
     <div class="footer">
         © 2025 Lexora. All rights reserved.
     </div>
+
+    <!-- FIREBASE SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } 
+            from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+            authDomain: "lexorasite.firebaseapp.com",
+            projectId: "lexorasite",
+            storageBucket: "lexorasite.firebasestorage.app",
+            messagingSenderId: "547338465904",
+            appId: "1:547338465904:web:438631173029042cfdbab5",
+            measurementId: "G-SCX7CQDFYR"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const actionCodeSettings = {
+            url: window.location.origin + '/dashboard.html',
+            handleCodeInApp: true
+        };
+
+        window.sendLoginLink = function() {
+            const email = document.getElementById('login-email').value;
+            sendSignInLinkToEmail(auth, email, actionCodeSettings)
+                .then(() => {
+                    window.localStorage.setItem('emailForSignIn', email);
+                    document.getElementById('login-message').innerText = "Login link sent! Check your email.";
+                })
+                .catch((error) => {
+                    document.getElementById('login-message').innerText = error.message;
+                });
+        }
+
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = window.localStorage.getItem('emailForSignIn');
+            if (!email) email = window.prompt('Please enter your email for confirmation');
+            signInWithEmailLink(auth, email, window.location.href)
+                .then(() => {
+                    window.localStorage.removeItem('emailForSignIn');
+                    window.location.href = 'dashboard.html';
+                })
+                .catch(error => {
+                    document.getElementById('login-message').innerText = error.message;
+                });
+        }
+    </script>
+
+</body>
+</html>
+dashboard.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexora Members Area</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            background-color: #0d0d0d;
+            color: white;
+        }
+        h1 { color: gold; text-align: center; }
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: gold;
+            color: black;
+            border: none;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid gold;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #222;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Welcome to Lexora Members Area</h1>
+<p id="welcome-message">Checking login...</p>
+<button onclick="logout()">Logout</button>
+
+<h2>Your Earnings</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Task</th>
+            <th>Amount ($)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>2025-11-23</td><td>Survey Completion</td><td>10</td></tr>
+        <tr><td>2025-11-22</td><td>Ad Click</td><td>5</td></tr>
+    </tbody>
+</table>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } 
+        from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+        authDomain: "lexorasite.firebaseapp.com",
+        projectId: "lexorasite",
+        storageBucket: "lexorasite.firebasestorage.app",
+        messagingSenderId: "547338465904",
+        appId: "1:547338465904:web:438631173029042cfdbab5",
+        measurementId: "G-SCX7CQDFYR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+        if(user) {
+            document.getElementById('welcome-message').innerText = `Hello, ${user.email}!`;
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    window.logout = function() {
+        signOut(auth).then(() => {
+            window.location.href = 'index.html';
+        }).catch(error => {
+            alert("Error logging out: " + error.message);
+        });
+    }
+</script>
 
 </body>
 </html>
