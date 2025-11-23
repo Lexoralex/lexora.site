@@ -1,50 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>LEXORA - Earn Money</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexora – Earn Smarter</title>
     <style>
         body {
-            font-family: Arial;
-            background: #0a0a12;
-            color: gold;
             margin: 0;
-            text-align: center;
-        }
-        header {
-            padding: 20px;
-            background: #111522;
-            color: gold;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .card {
-            background: #1a1f2e;
-            margin: 20px;
-            padding: 20px;
-            border-radius: 10px;
+            font-family: Arial, sans-serif;
+            background-color: #0d0d0d;
             color: white;
-            border: 1px solid gold;
         }
-        button {
-            background: gold;
-            border: none;
-            padding: 10px 20px;
-            color: black;
-            border-radius: 6px;
+
+        /* NAVBAR */
+        .navbar {
+            background-color: #000;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid gold;
+        }
+
+        .navbar a {
+            color: gold;
+            margin-left: 20px;
+            text-decoration: none;
             font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 120px 20px;
+            background: linear-gradient(to bottom, #000, #111);
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            color: gold;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #ffffffd0;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 25px;
+            background-color: gold;
+            color: black;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid #333;
+            color: #999;
+            margin-top: 50px;
         }
     </style>
 </head>
 <body>
 
-<header>LEXORA</header>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div style="color:gold; font-size:20px; font-weight:bold;">LEXORA</div>
+        <div>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="how-it-works.html">How It Works</a>
+            <a href="earning-plan.html">Earning Plan</a>
+            <a href="join-us.html">Join Us</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html">Login</a>
+        </div>
+    </div>
 
-<div class="card">
-    <h2>Earn Money with Ads, Surveys & Offers</h2>
-    <p>Sign up and start earning today!</p>
-    <button>Join Now</button>
-</div>
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <h1>Earn Money the Smart Way</h1>
+        <p>Lexora connects users with surveys, tasks, and rewards. Start your earning journey today with our trusted platform.</p>
+        <a class="btn" href="signup.html">Get Started</a>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        © 2025 Lexora. All rights reserved.
+    </div>
 
 </body>
 </html>
