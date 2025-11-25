@@ -1,138 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>LEXORA — Earn Money the Smart Way</title>
-<link rel="icon" href="/mnt/data/DAA0F706-FFE9-463B-885D-0EF9217DCBE2.jpeg">
-<style>
-  :root{--yellow:#f9d301;--bg:#000;--muted:#bdbdbd}
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter, system-ui, Arial;background:var(--bg);color:#fff}
-  header{position:fixed;top:0;left:0;right:0;background:rgba(10,10,10,0.95);z-index:60;border-bottom:1px solid #222}
-  .nav-wrap{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px}
-  .brand{display:flex;align-items:center;gap:12px}
-  .brand img{width:42px;height:42px;border-radius:6px;object-fit:cover}
-  .brand h1{font-size:18px;margin:0;color:var(--yellow)}
-  nav ul{list-style:none;display:flex;gap:18px;margin:0;padding:0;align-items:center}
-  nav a{color:var(--yellow);text-decoration:none;font-weight:600}
-  .mobile-toggle{display:none}
-  .container{max-width:1100px;margin:110px auto 60px;padding:20px}
-  .hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px;border-radius:12px;background:linear-gradient(180deg,#0c0c0c 0%, #050505 100%);box-shadow:0 6px 20px rgba(0,0,0,0.6)}
-  .hero img{width:120px;height:120px;border-radius:12px;object-fit:cover;margin-bottom:12px}
-  .hero h2{color:var(--yellow);font-size:40px;margin:6px 0}
-  .hero p{color:var(--muted);max-width:760px}
-  /* Login box */
-  .login-box{margin-top:30px;background:#111;padding:18px;border-radius:10px;border:1px solid #222;width:100%;max-width:420px}
-  input[type="email"]{width:100%;padding:12px;border-radius:8px;border:none;margin-bottom:12px}
-  .btn{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--yellow);color:#000;font-weight:700;border:none;cursor:pointer}
-  .muted{color:var(--muted);font-size:13px;margin-top:8px}
-  footer{margin:40px 0 80px;color:var(--muted);text-align:center}
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LEXORA — Earn Money the Smart Way</title>
+    <link rel="icon" href="hero.png"> <!-- Fixed path -->
+    <style>
+        :root{--yellow:#f9d301;--bg:#000;--muted:#bdbdbd}
+        *{box-sizing:border-box}
+        body{margin:0;font-family:Inter, system-ui, Arial;background:var(--bg);color:#fff}
+        header{position:fixed;top:0;left:0;right:0;background:rgba(10,10,10,0.95);z-index:60;border-bottom:1px solid #222}
+        .nav-wrap{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:14px}
+        .brand{display:flex;align-items:center;gap:12px}
+        .brand img{width:42px;height:42px;border-radius:6px;object-fit:cover}
+        .brand h1{font-size:18px;margin:0;color:var(--yellow)}
+        nav ul{list-style:none;display:flex;gap:18px;margin:0;padding:0;align-items:center}
+        nav a{color:var(--yellow);text-decoration:none;font-weight:600}
+        .mobile-toggle{display:none}
+        .container{max-width:1100px;margin:110px auto 60px;padding:20px}
+        .hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:40px;border-radius:12px;background:linear-gradient(180deg,#0c0c0c 0%, #050505 100%);box-shadow:0 6px 20px rgba(0,0,0,0.6)}
+        .hero img{width:120px;height:120px;border-radius:12px;object-fit:cover;margin-bottom:12px}
+        .hero h2{color:var(--yellow);font-size:40px;margin:6px 0}
+        .hero p{color:var(--muted);max-width:760px}
+        /* Login box */
+        .login-box{margin-top:30px;background:#111;padding:18px;border-radius:10px;border:1px solid #222;width:100%;max-width:420px}
+        input[type="email"]{width:100%;padding:12px;border-radius:8px;border:none;margin-bottom:12px}
+        .btn{display:inline-block;padding:12px 18px;border-radius:8px;background:var(--yellow);color:#000;font-weight:700;border:none;cursor:pointer}
+        .muted{color:var(--muted);font-size:13px;margin-top:8px}
+        footer{margin:40px 0 80px;color:var(--muted);text-align:center}
 
-  /* dashboard preview tiles */
-  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:30px}
-  .tile{background:#0b0b0b;padding:16px;border-radius:10px;border:1px solid #222}
-  .tile h3{margin:0;color:var(--yellow);font-size:18px}
-  .tile p{color:var(--muted);font-size:14px}
+        /* dashboard preview tiles */
+        .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:30px}
+        .tile{background:#0b0b0b;padding:16px;border-radius:10px;border:1px solid #222}
+        .tile h3{margin:0;color:var(--yellow);font-size:18px}
+        .tile p{color:var(--muted);font-size:14px}
 
-  @media(max-width:760px){
-    nav ul{display:none}
-    .mobile-toggle{display:block;color:var(--yellow);font-weight:700}
-    .hero h2{font-size:30px}
-    .brand h1{font-size:16px}
-  }
-</style>
+        @media(max-width:760px){
+            nav ul{display:none}
+            .mobile-toggle{display:block;color:var(--yellow);font-weight:700}
+            .hero h2{font-size:30px}
+            .brand h1{font-size:16px}
+        }
+    </style>
 </head>
 <body>
 
 <header>
-  <div class="nav-wrap">
-    <div class="brand">
-      <img src="/mnt/data/DAA0F706-FFE9-463B-885D-0EF9217DCBE2.jpeg" alt="Lexora logo">
-      <h1>LEXORA</h1>
+    <div class="nav-wrap">
+        <div class="brand">
+            <img src="hero.png" alt="Lexora logo"> <!-- Fixed path -->
+            <h1>LEXORA</h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="how.html">How It Works</a></li>
+                <li><a href="earning.html">Earning Plan</a></li>
+                <li><a href="join.html">Join Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="dashboard.html" id="navDashboard">Dashboard</a></li>
+            </ul>
+        </nav>
+
+        <div class="mobile-toggle">Menu</div>
     </div>
-
-    <nav>
-      <ul>
-        <li><a href="/index.html">Home</a></li>
-        <li><a href="/about.html">About</a></li>
-        <li><a href="/how.html">How It Works</a></li>
-        <li><a href="/earning.html">Earning Plan</a></li>
-        <li><a href="/join.html">Join Us</a></li>
-        <li><a href="/contact.html">Contact</a></li>
-        <li><a href="/dashboard.html" id="navDashboard">Dashboard</a></li>
-      </ul>
-    </nav>
-
-    <div class="mobile-toggle">Menu</div>
-  </div>
 </header>
 
 <main class="container">
-  <section class="hero" aria-labelledby="hero-title">
-    <img src="/mnt/data/DAA0F706-FFE9-463B-885D-0EF9217DCBE2.jpeg" alt="Lexora hero">
-    <h2 id="hero-title">Earn Money the Smart Way</h2>
-    <p>Lexora connects users with surveys, tasks, and rewards. Start your earning journey today with our trusted platform.</p>
+    <section class="hero" aria-labelledby="hero-title">
+        <img src="hero.png" alt="Lexora hero image"> <!-- Fixed path -->
+        <h2 id="hero-title">Earn Money the Smart Way</h2>
+        <p>Lexora connects users with surveys, tasks, and rewards. Start your earning journey today with our trusted platform.</p>
 
-    <!-- Passwordless Login Box -->
-    <div class="login-box" id="loginBox">
-      <h3 style="color:var(--yellow);margin:0 0 8px 0">Login (Magic Link)</h3>
-      <input id="emailInput" type="email" placeholder="Enter your email" aria-label="email">
-      <button id="sendLinkBtn" class="btn">Send Magic Link</button>
-      <p class="muted">You will receive a link to sign in. If you already clicked a link, open it to finish signing in.</p>
-    </div>
+        <!-- Passwordless Login Box -->
+        <div class="login-box" id="loginBox">
+            <h3 style="color:var(--yellow);margin:0 0 8px 0">Login (Magic Link)</h3>
+            <input id="emailInput" type="email" placeholder="Enter your email" aria-label="email">
+            <button id="sendLinkBtn" class="btn">Send Magic Link</button>
+            <p class="muted">You will receive a link to sign in. If you already clicked a link, open it to finish signing in.</p>
+        </div>
 
-    <div class="tiles" aria-hidden="true">
-      <div class="tile"><h3>Your safety</h3><p>We never share your data without consent.</p></div>
-      <div class="tile"><h3>Fast payouts</h3><p>Payouts via multiple methods (setup later in dashboard).</p></div>
-      <div class="tile"><h3>Trusted</h3><p>Real surveys and verified tasks.</p></div>
-    </div>
-  </section>
+        <div class="tiles" aria-hidden="true">
+            <div class="tile"><h3>Your safety</h3><p>We never share your data without consent.</p></div>
+            <div class="tile"><h3>Fast payouts</h3><p>Payouts via multiple methods (setup later in dashboard).</p></div>
+            <div class="tile"><h3>Trusted</h3><p>Real surveys and verified tasks.</p></div>
+        </div>
+    </section>
 
-  <footer>
-    © <span id="year"></span> Lexora — All rights reserved
-  </footer>
+    <footer>
+        © <span id="year"></span> Lexora — All rights reserved
+    </footer>
 </main>
 
 <!-- Firebase + Auth logic -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAuth, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
-  // Firebase config (lexorasite)
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-    authDomain: "lexorasite.firebaseapp.com",
-    projectId: "lexorasite",
-    storageBucket: "lexorasite.firebasestorage.app",
-    messagingSenderId: "547338465904",
-    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
-    measurementId: "G-X3RBR8FKXL"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  // send magic link
-  document.getElementById('sendLinkBtn').addEventListener('click', async ()=>{
-    const email = document.getElementById('emailInput').value.trim();
-    if(!email){alert('Please enter your email'); return;}
-    const actionCodeSettings = {
-      url: "https://lexorasite.web.app/finish.html", // finish page for completing sign-in
-      handleCodeInApp: true
+    const firebaseConfig = {
+        apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+        authDomain: "lexorasite.firebaseapp.com",
+        projectId: "lexorasite",
+        storageBucket: "lexorasite.firebasestorage.app",
+        messagingSenderId: "547338465904",
+        appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+        measurementId: "G-X3RBR8FKXL"
     };
-    try{
-      await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-      window.localStorage.setItem('emailForSignIn', email);
-      alert('Magic link sent — check your email.');
-    }catch(e){
-      alert('Error: ' + e.message);
-      console.error(e);
-    }
-  });
 
-  // small UI helpers
-  document.getElementById('year').textContent = new Date().getFullYear();
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('sendLinkBtn').addEventListener('click', async ()=>{
+        const email = document.getElementById('emailInput').value.trim();
+        if(!email){alert('Please enter your email'); return;}
+        const actionCodeSettings = {
+            url: window.location.origin + "/dashboard.html", // Redirect to dashboard after login
+            handleCodeInApp: true
+        };
+        try{
+            await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+            window.localStorage.setItem('emailForSignIn', email);
+            alert('Magic link sent — check your email.');
+        }catch(e){
+            alert('Error: ' + e.message);
+            console.error(e);
+        }
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
 </script>
 
 </body>
