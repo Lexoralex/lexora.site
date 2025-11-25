@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexora - Get Paid for Surveys & Ads</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    
     <style>
-        /* Your existing CSS styles */
         * {
             margin: 0;
             padding: 0;
@@ -41,6 +37,7 @@
             padding: 0 20px;
         }
 
+        /* Header */
         header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -79,10 +76,26 @@
             color: var(--dark);
             font-weight: 600;
             transition: color 0.3s;
+            position: relative;
         }
 
         .nav-links a:hover {
             color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .auth-buttons {
@@ -122,6 +135,7 @@
             background: var(--primary);
         }
 
+        /* Hero Section */
         .hero {
             padding: 160px 0 80px;
             text-align: center;
@@ -177,6 +191,7 @@
             opacity: 0.9;
         }
 
+        /* Magic Link Login Section */
         .magic-login {
             background: white;
             padding: 80px 0;
@@ -279,44 +294,236 @@
             border: 1px solid #b3d7ff;
         }
 
-        .debug-info {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            text-align: left;
-        }
-
-        .debug-info h4 {
-            color: var(--dark);
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--primary);
-            padding-bottom: 0.5rem;
-        }
-
-        .debug-step {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            padding: 1rem;
+        /* Features Section */
+        .features {
+            padding: 80px 0;
             background: white;
-            border-radius: 8px;
-            border-left: 4px solid var(--primary);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--dark);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+            border: 1px solid #e9ecef;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .step-number {
             background: var(--primary);
             color: var(--dark);
-            width: 30px;
-            height: 30px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.5rem;
             font-weight: bold;
-            flex-shrink: 0;
+            margin: 0 auto 1rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 1px solid #e9ecef;
+            position: relative;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .testimonial-role {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 80px 0;
+            background: var(--light);
+        }
+
+        .faq-item {
+            background: white;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            background: white;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-answer.active {
+            padding: 1.5rem;
+            max-height: 500px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .contact-info {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-info i {
+            color: var(--primary);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: #adb5bd;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
         }
 
         .mobile-toggle {
@@ -386,7 +593,7 @@
                 <a href="#login" class="btn btn-primary">
                     <i class="fas fa-rocket"></i> Start Earning Now
                 </a>
-                <a href="how-it-works.html" class="btn btn-secondary">
+                <a href="#how-it-works" class="btn btn-secondary">
                     <i class="fas fa-play-circle"></i> See How It Works
                 </a>
             </div>
@@ -431,46 +638,200 @@
                         <i class="fas fa-paper-plane"></i> Send Magic Link
                     </button>
                 </form>
+            </div>
+        </div>
+    </section>
 
-                <!-- Debug Information -->
-                <div class="debug-info">
-                    <h4><i class="fas fa-bug"></i> Not receiving magic links? Here's why:</h4>
-                    
-                    <div class="debug-step">
-                        <div class="step-number">1</div>
-                        <div>
-                            <strong>Firebase Setup Required</strong>
-                            <p>Go to Firebase Console → Authentication → Sign-in method → Enable "Email link"</p>
-                        </div>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Lexora?</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-dollar-sign"></i>
                     </div>
-
-                    <div class="debug-step">
-                        <div class="step-number">2</div>
-                        <div>
-                            <strong>Domain Authorization</strong>
-                            <p>Add "lexoralex.github.io" to Authorized domains in Firebase</p>
-                        </div>
+                    <h3>High Payouts</h3>
+                    <p>Earn up to $50 per survey and $0.50 per ad view. The highest rates in the industry.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
                     </div>
-
-                    <div class="debug-step">
-                        <div class="step-number">3</div>
-                        <div>
-                            <strong>Check Email Provider</strong>
-                            <p>Some email providers block Firebase emails. Try Gmail for testing.</p>
-                        </div>
+                    <h3>Instant Payments</h3>
+                    <p>Get paid instantly via PayPal, bank transfer, or cryptocurrency. No waiting periods.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
                     </div>
-
-                    <div class="debug-step">
-                        <div class="step-number">4</div>
-                        <div>
-                            <strong>Test Email</strong>
-                            <p>Try this test email: <code>test@example.com</code> (Firebase might block real emails during setup)</p>
-                        </div>
+                    <h3>100% Secure</h3>
+                    <p>Your data is protected with bank-level security. We never share your personal information.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
                     </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Earn money anywhere, anytime with our mobile-optimized platform.</p>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title" style="color: white;">How Lexora Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Sign Up Free</h3>
+                    <p>Create your account in 30 seconds. No credit card required.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Complete Tasks</h3>
+                    <p>Choose from surveys, ad views, or product testing tasks.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Earn Money</h3>
+                    <p>Get paid for each completed task. Payouts start at $5.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Withdraw Funds</h3>
+                    <p>Cash out instantly via your preferred payment method.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Users Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "I've earned over $500 in just two months! Lexora made it so easy to make extra money in my free time."
+                    </div>
+                    <div class="testimonial-author">Sarah M.</div>
+                    <div class="testimonial-role">College Student</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "The magic link login is genius! No passwords to remember and I get paid faster than any other platform."
+                    </div>
+                    <div class="testimonial-author">Mike R.</div>
+                    <div class="testimonial-role">Freelancer</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "As a stay-at-home parent, Lexora gives me the flexibility to earn money while taking care of my kids."
+                    </div>
+                    <div class="testimonial-author">Jennifer K.</div>
+                    <div class="testimonial-role">Parent</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <button class="faq-question">
+                    How much can I really earn?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Active users typically earn between $50-$500 per month depending on the tasks they complete. Surveys pay $0.50-$50 each, and ad views pay $0.10-$2 each.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    How do I get paid?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>We offer multiple payment methods including PayPal, bank transfer, and gift cards. Payments are processed within 24 hours once you reach the $5 minimum threshold.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    Is there any fee to join?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>No! Lexora is completely free to join. We never charge any registration fees, membership fees, or hidden charges.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Lexora</h3>
+                    <p>Lexora is a premier platform connecting users with paid surveys, advertisements, and market research opportunities.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="how-it-works.html">How It Works</a></li>
+                        <li><a href="earning.html">Earning Plans</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>lexoralexhelp@gmail.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>24/7 Customer Support</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-globe"></i>
+                            <span>Worldwide Service</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                        <li><a href="cookies.html">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Lexora. All rights reserved. | Making the world's opinions valuable.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Firebase Configuration
@@ -480,18 +841,10 @@
             projectId: "lexorasite",
             storageBucket: "lexorasite.firebasestorage.app",
             messagingSenderId: "547338465904",
-            appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
-            measurementId: "G-X3RBR8FKXL"
+            appId: "1:547338465904:web:28a41ac22e86c593fdbab5"
         };
-
-        // Initialize Firebase
-        try {
-            firebase.initializeApp(firebaseConfig);
-            console.log('✅ Firebase initialized successfully');
-        } catch (error) {
-            console.log('❌ Firebase initialization error:', error);
-        }
         
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
         // Show status message
@@ -500,19 +853,11 @@
             statusEl.textContent = message;
             statusEl.className = 'status-message status-' + type;
             statusEl.style.display = 'block';
-            
-            // Auto-hide success messages after 5 seconds
-            if (type === 'success') {
-                setTimeout(() => {
-                    statusEl.style.display = 'none';
-                }, 5000);
-            }
         }
 
         // Magic Link Form Handler
         document.getElementById('magicLinkForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const email = document.getElementById('email').value.trim();
             const sendBtn = document.getElementById('sendLinkBtn');
             
@@ -521,7 +866,6 @@
                 return;
             }
 
-            // Show loading state
             sendBtn.disabled = true;
             sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Magic Link...';
 
@@ -531,73 +875,82 @@
                     handleCodeInApp: true
                 };
 
-                console.log('📧 Attempting to send magic link to:', email);
-                console.log('🔗 Redirect URL:', actionCodeSettings.url);
-
+                console.log('📧 Sending magic link to:', email);
+                
                 await auth.sendSignInLinkToEmail(email, actionCodeSettings);
                 
-                // Save email to localStorage
+                // Store email in MULTIPLE places to ensure it's available
                 window.localStorage.setItem('emailForSignIn', email);
+                window.sessionStorage.setItem('emailForSignIn', email);
+                document.cookie = `emailForSignIn=${email}; path=/; max-age=3600`;
                 
-                showStatus('✅ Magic link sent! Check your email inbox (including spam folder). Click the link to sign in.', 'success');
+                console.log('✅ Magic link sent, email stored:', email);
+                
+                showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
                 sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
                 
-                console.log('✅ Magic link sent successfully');
-                
             } catch (error) {
-                console.error('❌ Error sending magic link:', error);
-                
-                let errorMessage = 'Error: ' + error.message;
-                
-                if (error.code === 'auth/operation-not-allowed') {
-                    errorMessage = '❌ Magic links not enabled. Go to Firebase Console → Authentication → Enable "Email link"';
-                } else if (error.code === 'auth/unauthorized-continue-uri') {
-                    errorMessage = '❌ Domain not authorized. Add "lexoralex.github.io" to Firebase Authorized domains';
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMessage = '❌ Please enter a valid email address';
-                }
-                
-                showStatus(errorMessage, 'error');
+                console.error('❌ Error:', error);
+                showStatus('Error: ' + error.message, 'error');
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
             }
         });
 
-        // Check if returning from magic link
+        // Check if we're returning from a magic link
         if (auth.isSignInWithEmailLink(window.location.href)) {
             console.log('🔗 Magic link detected in URL');
-            let email = window.localStorage.getItem('emailForSignIn');
             
-            if (!email) {
-                email = window.prompt('Please provide your email for confirmation:');
-            }
+            // Try multiple storage locations for the email
+            let email = window.localStorage.getItem('emailForSignIn') || 
+                       window.sessionStorage.getItem('emailForSignIn') ||
+                       getCookie('emailForSignIn');
             
             if (email) {
-                showStatus('🔄 Signing you in...', 'info');
-                
-                auth.signInWithEmailLink(email, window.location.href)
-                    .then((result) => {
-                        window.localStorage.removeItem('emailForSignIn');
-                        showStatus('✅ Successfully signed in! Redirecting to dashboard...', 'success');
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 2000);
-                    })
-                    .catch((error) => {
-                        console.error('Error signing in:', error);
-                        showStatus('❌ Error signing in: ' + error.message, 'error');
-                    });
+                console.log('✅ Found stored email:', email);
+                // Redirect to dashboard with email as parameter
+                window.location.href = 'dashboard.html?email=' + encodeURIComponent(email);
+            } else {
+                console.log('❌ No stored email found');
+                // Let dashboard handle the email prompt
+                window.location.href = 'dashboard.html';
             }
         }
+
+        // Helper function to get cookie
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        // FAQ functionality
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const isActive = answer.classList.contains('active');
+                
+                // Close all answers
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.classList.remove('active');
+                });
+                document.querySelectorAll('.faq-question').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Open current if not active
+                if (!isActive) {
+                    answer.classList.add('active');
+                    button.classList.add('active');
+                }
+            });
+        });
 
         // Mobile menu toggle
         document.querySelector('.mobile-toggle').addEventListener('click', function() {
             const navLinks = document.querySelector('.nav-links');
             navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
         });
-
-        // Auto-focus on email input
-        document.getElementById('email').focus();
     </script>
 </body>
 </html>
