@@ -511,6 +511,23 @@
                         Don't have an account? <a href="register.html">Sign up here</a>
                     </div>
                 </form>
+
+                <!-- Firebase Setup Instructions -->
+                <div style="margin-top: 2rem; padding: 1.5rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 10px; text-align: left;">
+                    <h4 style="color: #856404; margin-bottom: 1rem;">
+                        <i class="fas fa-exclamation-triangle"></i> Firebase Setup Required
+                    </h4>
+                    <p style="color: #856404; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                        To enable magic links, you need to:
+                    </p>
+                    <ol style="color: #856404; font-size: 0.9rem; padding-left: 1.5rem;">
+                        <li>Go to <a href="https://console.firebase.google.com/" target="_blank" style="color: #004085;">Firebase Console</a></li>
+                        <li>Select your project "lexorasite"</li>
+                        <li>Go to Authentication → Sign-in method</li>
+                        <li>Enable "Email/Password" and "Email link"</li>
+                        <li>Click Save</li>
+                    </ol>
+                </div>
             </div>
         </div>
     </section>
@@ -607,7 +624,13 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        try {
+            firebase.initializeApp(firebaseConfig);
+            console.log('Firebase initialized successfully');
+        } catch (error) {
+            console.log('Firebase initialization error:', error);
+        }
+        
         const auth = firebase.auth();
 
         // Mobile menu toggle
@@ -641,9 +664,16 @@
                 return;
             }
 
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showStatus('Please enter a valid email address.', 'error');
+                return;
+            }
+
             // Show loading state
             sendBtn.disabled = true;
-            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Magic Link...';
             hideStatus();
 
             try {
@@ -657,12 +687,25 @@
                 // Save email to localStorage
                 window.localStorage.setItem('emailForSignIn', email);
                 
-                showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
-                sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
+                showStatus('✅ Magic link sent! Check your email inbox and click the link to sign in.', 'success');
+                sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent Successfully!';
+                
+                // Clear form
+                document.getElementById('email').value = '';
                 
             } catch (error) {
                 console.error('Error sending magic link:', error);
-                showStatus('Error sending magic link: ' + error.message, 'error');
+                
+                if (error.code === 'auth/operation-not-allowed') {
+                    showStatus('❌ Magic link authentication is not enabled. Please follow the setup instructions above to enable it in Firebase Console.', 'error');
+                } else if (error.code === 'auth/invalid-email') {
+                    showStatus('❌ Please enter a valid email address.', 'error');
+                } else if (error.code === 'auth/too-many-requests') {
+                    showStatus('❌ Too many attempts. Please try again later.', 'error');
+                } else {
+                    showStatus('❌ Error: ' + error.message, 'error');
+                }
+                
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
             }
@@ -677,17 +720,19 @@
             }
             
             if (email) {
+                showStatus('🔄 Signing you in...', 'info');
+                
                 auth.signInWithEmailLink(email, window.location.href)
                     .then((result) => {
                         window.localStorage.removeItem('emailForSignIn');
-                        showStatus('Successfully signed in! Redirecting to dashboard...', 'success');
+                        showStatus('✅ Successfully signed in! Redirecting to dashboard...', 'success');
                         setTimeout(() => {
                             window.location.href = 'dashboard.html';
                         }, 2000);
                     })
                     .catch((error) => {
                         console.error('Error signing in:', error);
-                        showStatus('Error signing in: ' + error.message, 'error');
+                        showStatus('❌ Error signing in: ' + error.message, 'error');
                     });
             }
         }
@@ -697,12 +742,15 @@
             if (user) {
                 // User is signed in
                 console.log('User signed in:', user.email);
-                // Update UI for signed-in user if needed
+                // You can update UI here if needed
             } else {
                 // User is signed out
                 console.log('User signed out');
             }
         });
+
+        // Auto-focus on email input
+        document.getElementById('email')?.focus();
     </script>
 </body>
 </html>
