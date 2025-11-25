@@ -211,11 +211,46 @@
             width: 100%;
             margin-top: 1rem;
         }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-spinner"></div>
+        <p>Signing you in...</p>
+    </div>
+
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" style="display: none;" id="sidebar">
         <div class="logo">
             <a href="index.html">
                 <i class="fas fa-coins"></i>
@@ -240,7 +275,7 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <div class="main-content" style="display: none;" id="mainContent">
         <!-- Top Bar -->
         <div class="top-bar">
             <div class="user-info">
@@ -335,15 +370,76 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Check authentication
+        // Show dashboard content
+        function showDashboard(user) {
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+            
+            // Hide loading screen, show dashboard
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('sidebar').style.display = 'block';
+            document.getElementById('mainContent').style.display = 'block';
+        }
+
+        // Handle magic link sign-in
+        function handleMagicLinkSignIn() {
+            console.log('🔗 Handling magic link sign-in...');
+            
+            // Check if this is a magic link callback
+            if (auth.isSignInWithEmailLink(window.location.href)) {
+                console.log('✅ Magic link detected');
+                
+                let email = window.localStorage.getItem('emailForSignIn');
+                
+                if (!email) {
+                    email = window.prompt('Please provide your email for confirmation:');
+                }
+                
+                if (email) {
+                    console.log('📧 Signing in with email:', email);
+                    
+                    auth.signInWithEmailLink(email, window.location.href)
+                        .then((result) => {
+                            console.log('✅ Successfully signed in!');
+                            window.localStorage.removeItem('emailForSignIn');
+                            showDashboard(result.user);
+                            
+                            // Clean URL - remove magic link parameters
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        })
+                        .catch((error) => {
+                            console.error('❌ Error signing in:', error);
+                            alert('Error signing in: ' + error.message);
+                            window.location.href = 'index.html';
+                        });
+                } else {
+                    console.log('❌ No email provided');
+                    window.location.href = 'index.html';
+                }
+            } else {
+                console.log('🔍 Checking existing authentication...');
+                // Check if user is already signed in
+                const user = auth.currentUser;
+                if (user) {
+                    console.log('✅ User already signed in:', user.email);
+                    showDashboard(user);
+                } else {
+                    console.log('❌ No user signed in, redirecting to homepage');
+                    window.location.href = 'index.html';
+                }
+            }
+        }
+
+        // Check authentication state
         auth.onAuthStateChanged((user) => {
+            console.log('🔄 Auth state changed:', user ? user.email : 'No user');
+            
             if (user) {
                 // User is signed in
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+                showDashboard(user);
             } else {
-                // User is signed out, redirect to login
-                window.location.href = 'index.html';
+                // User is signed out, try magic link sign-in
+                handleMagicLinkSignIn();
             }
         });
 
@@ -365,6 +461,10 @@
                 alert(`Task completed! ${taskAmount} will be added to your balance.`);
             });
         });
+
+        // Initial check
+        console.log('🚀 Dashboard loading...');
+        handleMagicLinkSignIn();
     </script>
 </body>
 </html>
