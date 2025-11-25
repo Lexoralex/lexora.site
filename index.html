@@ -11,6 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     
     <style>
+        /* Your existing CSS styles */
         * {
             margin: 0;
             padding: 0;
@@ -40,7 +41,6 @@
             padding: 0 20px;
         }
 
-        /* Header */
         header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -122,7 +122,6 @@
             background: var(--primary);
         }
 
-        /* Hero Section */
         .hero {
             padding: 160px 0 80px;
             text-align: center;
@@ -178,7 +177,6 @@
             opacity: 0.9;
         }
 
-        /* Magic Link Login Section */
         .magic-login {
             background: white;
             padding: 80px 0;
@@ -189,7 +187,7 @@
             padding: 3rem;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 450px;
+            max-width: 500px;
             margin: 0 auto;
             text-align: center;
         }
@@ -255,16 +253,6 @@
             transform: none;
         }
 
-        .signup-link {
-            color: #666;
-        }
-
-        .signup-link a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
         .status-message {
             padding: 1rem;
             border-radius: 10px;
@@ -291,107 +279,44 @@
             border: 1px solid #b3d7ff;
         }
 
-        /* Features */
-        .features {
-            padding: 80px 0;
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .debug-info h4 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        .debug-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
             background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
         }
 
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
+        .step-number {
+            background: var(--primary);
             color: var(--dark);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: var(--light);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s;
-            border: 1px solid #e9ecef;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 60px 0 20px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-section h3 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links a {
-            color: #adb5bd;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .contact-info {
-            list-style: none;
-        }
-
-        .contact-info li {
-            margin-bottom: 1rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
-            gap: 10px;
-        }
-
-        .contact-info i {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid #495057;
-            color: #adb5bd;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
         }
 
         .mobile-toggle {
@@ -441,8 +366,7 @@
                 </ul>
 
                 <div class="auth-buttons">
-                    <a href="login.html" class="btn btn-secondary">Login</a>
-                    <a href="register.html" class="btn btn-primary">Sign Up Free</a>
+                    <a href="#login" class="btn btn-primary">Sign In</a>
                 </div>
 
                 <button class="mobile-toggle">
@@ -459,7 +383,7 @@
             <p>Join thousands of users earning money by completing surveys, watching ads, and testing products. Start earning today!</p>
             
             <div class="hero-buttons">
-                <a href="register.html" class="btn btn-primary">
+                <a href="#login" class="btn btn-primary">
                     <i class="fas fa-rocket"></i> Start Earning Now
                 </a>
                 <a href="how-it-works.html" class="btn btn-secondary">
@@ -489,11 +413,11 @@
     </section>
 
     <!-- Magic Link Login Section -->
-    <section class="magic-login">
+    <section class="magic-login" id="login">
         <div class="container">
             <div class="login-box">
-                <h2>Passwordless Login</h2>
-                <p>Enter your email and we'll send you a magic link to sign in instantly!</p>
+                <h2>Sign In to Lexora</h2>
+                <p>Enter your email and we'll send you a secure magic link to access your account!</p>
                 
                 <div id="statusMessage" class="status-message"></div>
 
@@ -506,111 +430,47 @@
                     <button type="submit" class="magic-btn" id="sendLinkBtn">
                         <i class="fas fa-paper-plane"></i> Send Magic Link
                     </button>
-
-                    <div class="signup-link">
-                        Don't have an account? <a href="register.html">Sign up here</a>
-                    </div>
                 </form>
 
-                <!-- Firebase Setup Instructions -->
-                <div style="margin-top: 2rem; padding: 1.5rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 10px; text-align: left;">
-                    <h4 style="color: #856404; margin-bottom: 1rem;">
-                        <i class="fas fa-exclamation-triangle"></i> Firebase Domain Setup Required
-                    </h4>
-                    <p style="color: #856404; font-size: 0.9rem; margin-bottom: 0.5rem;">
-                        To fix the domain error, add these authorized domains in Firebase:
-                    </p>
-                    <ol style="color: #856404; font-size: 0.9rem; padding-left: 1.5rem;">
-                        <li><strong>https://lexoralex.github.io</strong></li>
-                        <li><strong>https://lexorasite.web.app</strong></li>
-                        <li><strong>http://localhost</strong> (for testing)</li>
-                    </ol>
-                    <p style="color: #856404; font-size: 0.9rem; margin-top: 1rem;">
-                        Go to: Firebase Console → Authentication → Settings → Authorized domains
-                    </p>
+                <!-- Debug Information -->
+                <div class="debug-info">
+                    <h4><i class="fas fa-bug"></i> Not receiving magic links? Here's why:</h4>
+                    
+                    <div class="debug-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <strong>Firebase Setup Required</strong>
+                            <p>Go to Firebase Console → Authentication → Sign-in method → Enable "Email link"</p>
+                        </div>
+                    </div>
+
+                    <div class="debug-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <strong>Domain Authorization</strong>
+                            <p>Add "lexoralex.github.io" to Authorized domains in Firebase</p>
+                        </div>
+                    </div>
+
+                    <div class="debug-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <strong>Check Email Provider</strong>
+                            <p>Some email providers block Firebase emails. Try Gmail for testing.</p>
+                        </div>
+                    </div>
+
+                    <div class="debug-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <strong>Test Email</strong>
+                            <p>Try this test email: <code>test@example.com</code> (Firebase might block real emails during setup)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <h2 class="section-title">Why Choose Lexora?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <h3>High Payouts</h3>
-                    <p>Earn up to $50 per survey and $0.50 per ad view. The highest rates in the industry.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Instant Payments</h3>
-                    <p>Get paid instantly via PayPal, bank transfer, or cryptocurrency. No waiting periods.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>100% Secure</h3>
-                    <p>Your data is protected with bank-level security. We never share your personal information.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Mobile Friendly</h3>
-                    <p>Earn money anywhere, anytime with our mobile-optimized platform.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>About Lexora</h3>
-                    <p>Lexora is a premier platform connecting users with paid surveys, advertisements, and market research opportunities.</p>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="how-it-works.html">How It Works</a></li>
-                        <li><a href="earning.html">Earning Plans</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h3>Contact Support</h3>
-                    <ul class="contact-info">
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>lexoralexhelp@gmail.com</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-clock"></i>
-                            <span>24/7 Customer Support</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2024 Lexora. All rights reserved. | Making the world's opinions valuable.</p>
-            </div>
-        </div>
-    </footer>
 
     <script>
         // Firebase Configuration
@@ -627,18 +487,12 @@
         // Initialize Firebase
         try {
             firebase.initializeApp(firebaseConfig);
-            console.log('Firebase initialized successfully');
+            console.log('✅ Firebase initialized successfully');
         } catch (error) {
-            console.log('Firebase initialization error:', error);
+            console.log('❌ Firebase initialization error:', error);
         }
         
         const auth = firebase.auth();
-
-        // Mobile menu toggle
-        document.querySelector('.mobile-toggle').addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        });
 
         // Show status message
         function showStatus(message, type) {
@@ -646,11 +500,13 @@
             statusEl.textContent = message;
             statusEl.className = 'status-message status-' + type;
             statusEl.style.display = 'block';
-        }
-
-        // Hide status message
-        function hideStatus() {
-            document.getElementById('statusMessage').style.display = 'none';
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 5000);
+            }
         }
 
         // Magic Link Form Handler
@@ -665,58 +521,51 @@
                 return;
             }
 
-            // Validate email format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                showStatus('Please enter a valid email address.', 'error');
-                return;
-            }
-
             // Show loading state
             sendBtn.disabled = true;
             sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Magic Link...';
-            hideStatus();
 
             try {
                 const actionCodeSettings = {
-                    // Use the exact domain that's authorized in Firebase
-                    url: 'https://lexoralex.github.io/lexora.site/dashboard.html',
+                    url: window.location.origin + '/lexora.site/dashboard.html',
                     handleCodeInApp: true
                 };
+
+                console.log('📧 Attempting to send magic link to:', email);
+                console.log('🔗 Redirect URL:', actionCodeSettings.url);
 
                 await auth.sendSignInLinkToEmail(email, actionCodeSettings);
                 
                 // Save email to localStorage
                 window.localStorage.setItem('emailForSignIn', email);
                 
-                showStatus('✅ Magic link sent! Check your email inbox and click the link to sign in.', 'success');
-                sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent Successfully!';
+                showStatus('✅ Magic link sent! Check your email inbox (including spam folder). Click the link to sign in.', 'success');
+                sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
                 
-                // Clear form
-                document.getElementById('email').value = '';
+                console.log('✅ Magic link sent successfully');
                 
             } catch (error) {
-                console.error('Error sending magic link:', error);
+                console.error('❌ Error sending magic link:', error);
+                
+                let errorMessage = 'Error: ' + error.message;
                 
                 if (error.code === 'auth/operation-not-allowed') {
-                    showStatus('❌ Magic link authentication is not enabled. Please enable "Email link" in Firebase Authentication → Sign-in method.', 'error');
+                    errorMessage = '❌ Magic links not enabled. Go to Firebase Console → Authentication → Enable "Email link"';
                 } else if (error.code === 'auth/unauthorized-continue-uri') {
-                    showStatus('❌ Domain not authorized. Please add "https://lexoralex.github.io" to authorized domains in Firebase Console.', 'error');
+                    errorMessage = '❌ Domain not authorized. Add "lexoralex.github.io" to Firebase Authorized domains';
                 } else if (error.code === 'auth/invalid-email') {
-                    showStatus('❌ Please enter a valid email address.', 'error');
-                } else if (error.code === 'auth/too-many-requests') {
-                    showStatus('❌ Too many attempts. Please try again later.', 'error');
-                } else {
-                    showStatus('❌ Error: ' + error.message, 'error');
+                    errorMessage = '❌ Please enter a valid email address';
                 }
                 
+                showStatus(errorMessage, 'error');
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
             }
         });
 
-        // Check if user is returning from magic link
+        // Check if returning from magic link
         if (auth.isSignInWithEmailLink(window.location.href)) {
+            console.log('🔗 Magic link detected in URL');
             let email = window.localStorage.getItem('emailForSignIn');
             
             if (!email) {
@@ -741,20 +590,14 @@
             }
         }
 
-        // Check auth state
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                // User is signed in
-                console.log('User signed in:', user.email);
-                // You can update UI here if needed
-            } else {
-                // User is signed out
-                console.log('User signed out');
-            }
+        // Mobile menu toggle
+        document.querySelector('.mobile-toggle').addEventListener('click', function() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
         });
 
         // Auto-focus on email input
-        document.getElementById('email')?.focus();
+        document.getElementById('email').focus();
     </script>
 </body>
 </html>
