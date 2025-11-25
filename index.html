@@ -369,3 +369,109 @@ dashboard.html
 
 </body>
 </html>
+cv
+login.html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Passwordless Email Login</title>
+</head>
+<body>
+
+<h2>Passwordless Login</h2>
+<input type="email" id="emailInput" placeholder="Enter your email">
+<button id="sendLinkBtn">Send Login Link</button>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  // Your Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+    authDomain: "lexorasite.firebaseapp.com",
+    projectId: "lexorasite",
+    storageBucket: "lexorasite.firebasestorage.app",
+    messagingSenderId: "547338465904",
+    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+    measurementId: "G-X3RBR8FKXL"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  document.getElementById("sendLinkBtn").addEventListener("click", () => {
+    const email = document.getElementById("emailInput").value;
+
+    const actionCodeSettings = {
+      url: "https://lexorasite.web.app/finish.html",
+      handleCodeInApp: true
+    };
+
+    sendSignInLinkToEmail(auth, email, actionCodeSettings)
+      .then(() => {
+        window.localStorage.setItem("emailForSignIn", email);
+        alert("Login link sent to your email!");
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  });
+</script>
+
+</body>
+</html>
+finish.html
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Completing Sign-In</title>
+</head>
+<body>
+
+<h2>Signing you in...</h2>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailLink,
+    isSignInWithEmailLink
+  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+    authDomain: "lexorasite.firebaseapp.com",
+    projectId: "lexorasite",
+    storageBucket: "lexorasite.firebasestorage.app",
+    messagingSenderId: "547338465904",
+    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+    measurementId: "G-X3RBR8FKXL"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  if (isSignInWithEmailLink(auth, window.location.href)) {
+    let email = window.localStorage.getItem("emailForSignIn");
+
+    if (!email) {
+      email = prompt("Please confirm your email:");
+    }
+
+    signInWithEmailLink(auth, email, window.location.href)
+      .then(() => {
+        window.localStorage.removeItem("emailForSignIn");
+        alert("You are signed in!");
+        window.location.href = "/"; // redirect to home
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  }
+</script>
+
+</body>
+</html>
