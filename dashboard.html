@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Lexora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -292,25 +290,34 @@
             margin: 1rem 0;
             text-align: center;
         }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
-        <p id="loadingText">Signing you in...</p>
+        <p id="loadingText">Checking authentication...</p>
     </div>
 
     <!-- Email Prompt -->
     <div class="email-prompt" id="emailPrompt" style="display: none;">
         <div class="email-prompt-box">
-            <h3>Confirm Your Email</h3>
-            <p>Please enter the same email address you used to request the magic link:</p>
+            <h3>Authentication Required</h3>
+            <p>Please enter your email address to continue:</p>
             <input type="email" id="confirmEmail" placeholder="Enter your email address">
             <div id="emailError" class="error-message" style="display: none;"></div>
             <div style="margin-top: 1rem;">
-                <button onclick="confirmEmail()">Sign In</button>
-                <button onclick="cancelSignIn()" style="background: #6c757d; color: white;">Get New Link</button>
+                <button onclick="verifyEmail()">Continue</button>
+                <button onclick="redirectToHome()" style="background: #6c757d; color: white;">Get New Link</button>
             </div>
         </div>
     </div>
@@ -422,26 +429,14 @@
     </div>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-            authDomain: "lexorasite.firebaseapp.com",
-            projectId: "lexorasite",
-            storageBucket: "lexorasite.firebasestorage.app",
-            messagingSenderId: "547338465904",
-            appId: "1:547338465904:web:28a41ac22e86c593fdbab5"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-
-        let magicLinkUsed = false;
-
         // Show dashboard content
-        function showDashboard(user) {
-            document.getElementById('userEmail').textContent = user.email;
-            document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
+        function showDashboard(userEmail) {
+            document.getElementById('userEmail').textContent = userEmail;
+            document.getElementById('userAvatar').textContent = userEmail.charAt(0).toUpperCase();
+            
+            // Store user session
+            localStorage.setItem('lexora_user', userEmail);
+            localStorage.setItem('lexora_loggedIn', 'true');
             
             // Hide loading screen, show dashboard
             document.getElementById('loadingScreen').style.display = 'none';
@@ -461,8 +456,8 @@
             document.getElementById('emailError').style.display = 'none';
         }
 
-        // Handle email confirmation
-        function confirmEmail() {
+        // Verify email from magic link
+        function verifyEmail() {
             const email = document.getElementById('confirmEmail').value.trim();
             if (!email) {
                 showError('Please enter your email address');
@@ -472,145 +467,173 @@
             hideError();
             document.getElementById('emailPrompt').style.display = 'none';
             document.getElementById('loadingScreen').style.display = 'flex';
-            document.getElementById('loadingText').textContent = 'Signing you in...';
+            document.getElementById('loadingText').textContent = 'Verifying your email...';
 
-            // Clear any stored email to prevent conflicts
-            window.localStorage.removeItem('emailForSignIn');
-            window.sessionStorage.removeItem('emailForSignIn');
+            // Check if this email matches the magic link token
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const linkEmail = urlParams.get('email');
 
-            auth.signInWithEmailLink(email, window.location.href)
-                .then((result) => {
-                    console.log('✅ Successfully signed in with magic link');
-                    magicLinkUsed = true;
-                    
-                    // Clean URL - remove magic link parameters
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    
-                    showDashboard(result.user);
-                })
-                .catch((error) => {
-                    console.error('❌ Error signing in:', error);
-                    
-                    let errorMessage = 'Error signing in: ' + error.message;
-                    
-                    if (error.code === 'auth/invalid-action-code') {
-                        errorMessage = 'This magic link has expired or was already used. Please request a new one.';
-                    } else if (error.code === 'auth/expired-action-code') {
-                        errorMessage = 'This magic link has expired. Please request a new one.';
-                    } else if (error.code === 'auth/user-disabled') {
-                        errorMessage = 'This account has been disabled.';
-                    }
-                    
-                    // Show error and prompt again
-                    document.getElementById('loadingScreen').style.display = 'none';
-                    document.getElementById('emailPrompt').style.display = 'flex';
-                    showError(errorMessage);
-                });
+            if (token && linkEmail) {
+                // Verify token matches stored token
+                const storedToken = localStorage.getItem('pendingToken');
+                const storedEmail = localStorage.getItem('pendingEmail');
+
+                if (token === storedToken && email === storedEmail && email === linkEmail) {
+                    // Successful verification
+                    setTimeout(() => {
+                        // Clean URL - remove magic link parameters
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        
+                        // Clear pending data
+                        localStorage.removeItem('pendingToken');
+                        localStorage.removeItem('pendingEmail');
+                        
+                        showDashboard(email);
+                    }, 1000);
+                } else {
+                    // Invalid token or email mismatch
+                    setTimeout(() => {
+                        showError('Invalid magic link. Please request a new one.');
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        document.getElementById('emailPrompt').style.display = 'flex';
+                    }, 1000);
+                }
+            } else {
+                // No token in URL, check existing session
+                checkExistingSession(email);
+            }
         }
 
-        function cancelSignIn() {
-            // Redirect to homepage to get a new magic link
+        // Check existing user session
+        function checkExistingSession(email) {
+            const existingUser = localStorage.getItem('lexora_user');
+            if (existingUser === email) {
+                // User already has a valid session
+                setTimeout(() => {
+                    showDashboard(email);
+                }, 1000);
+            } else {
+                // No valid session
+                setTimeout(() => {
+                    showError('No valid session found. Please request a new magic link.');
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('emailPrompt').style.display = 'flex';
+                }, 1000);
+            }
+        }
+
+        // Redirect to homepage
+        function redirectToHome() {
             window.location.href = 'index.html';
         }
 
-        // Handle magic link sign-in
-        function handleMagicLinkSignIn() {
-            console.log('🔗 Checking for magic link...');
+        // Handle magic link authentication
+        function handleMagicLinkAuth() {
+            console.log('🔗 Checking for magic link authentication...');
             
-            if (auth.isSignInWithEmailLink(window.location.href)) {
-                console.log('✅ Magic link detected in URL');
-                
-                // Try to get email from multiple sources
-                const urlParams = new URLSearchParams(window.location.search);
-                let email = urlParams.get('email') || 
-                           window.localStorage.getItem('emailForSignIn') ||
-                           window.sessionStorage.getItem('emailForSignIn');
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const email = urlParams.get('email');
 
-                if (email) {
-                    console.log('✅ Found stored email:', email);
+            if (token && email) {
+                console.log('✅ Magic link detected');
+                
+                // Check if token matches stored token
+                const storedToken = localStorage.getItem('pendingToken');
+                const storedEmail = localStorage.getItem('pendingEmail');
+
+                if (token === storedToken && email === storedEmail) {
+                    console.log('✅ Token verification successful');
+                    
+                    // Auto-login user
                     document.getElementById('loadingScreen').style.display = 'flex';
                     document.getElementById('loadingText').textContent = 'Signing you in...';
                     
-                    // Clear stored email immediately to prevent reuse
-                    window.localStorage.removeItem('emailForSignIn');
-                    window.sessionStorage.removeItem('emailForSignIn');
-
-                    auth.signInWithEmailLink(email, window.location.href)
-                        .then((result) => {
-                            console.log('✅ Successfully signed in automatically');
-                            magicLinkUsed = true;
-                            
-                            // Clean URL
-                            window.history.replaceState({}, document.title, window.location.pathname);
-                            showDashboard(result.user);
-                        })
-                        .catch((error) => {
-                            console.error('❌ Automatic sign-in failed:', error);
-                            
-                            // Show email prompt for manual entry
-                            document.getElementById('loadingScreen').style.display = 'none';
-                            document.getElementById('emailPrompt').style.display = 'flex';
-                            
-                            if (email) {
-                                // Pre-fill the email input
-                                document.getElementById('confirmEmail').value = email;
-                            }
-                            
-                            if (error.code === 'auth/invalid-action-code') {
-                                showError('This link has expired. Please request a new magic link.');
-                            }
-                        });
+                    setTimeout(() => {
+                        // Clean URL
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        
+                        // Clear pending data
+                        localStorage.removeItem('pendingToken');
+                        localStorage.removeItem('pendingEmail');
+                        
+                        showDashboard(email);
+                    }, 1500);
                 } else {
-                    console.log('❌ No stored email found, showing prompt');
-                    // Show email prompt for manual entry
+                    console.log('❌ Token verification failed');
+                    // Show email prompt for manual verification
                     document.getElementById('emailPrompt').style.display = 'flex';
+                    document.getElementById('confirmEmail').value = email;
+                    document.getElementById('loadingScreen').style.display = 'none';
                 }
             } else {
-                console.log('🔍 No magic link detected, checking existing auth');
-                // Check if user is already signed in
-                const user = auth.currentUser;
-                if (user) {
-                    console.log('✅ User already signed in:', user.email);
-                    showDashboard(user);
-                } else {
-                    console.log('❌ No user found, redirecting to homepage');
-                    // No magic link and no user - go to homepage
-                    window.location.href = 'index.html';
-                }
+                console.log('🔍 No magic link found, checking existing session');
+                checkExistingUser();
             }
         }
 
-        // Check authentication state
-        auth.onAuthStateChanged((user) => {
-            console.log('🔄 Auth state changed:', user ? user.email : 'No user');
-            if (user && !magicLinkUsed) {
-                // User is signed in (possibly from previous session)
-                showDashboard(user);
+        // Check for existing logged-in user
+        function checkExistingUser() {
+            const isLoggedIn = localStorage.getItem('lexora_loggedIn');
+            const userEmail = localStorage.getItem('lexora_user');
+
+            if (isLoggedIn === 'true' && userEmail) {
+                console.log('✅ User already logged in:', userEmail);
+                showDashboard(userEmail);
+            } else {
+                console.log('❌ No valid session found');
+                // Show email prompt
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('emailPrompt').style.display = 'flex';
             }
-        });
+        }
 
         // Logout functionality
         document.getElementById('logoutBtn').addEventListener('click', () => {
-            auth.signOut().then(() => {
-                window.location.href = 'index.html';
-            });
+            // Clear all user data
+            localStorage.removeItem('lexora_user');
+            localStorage.removeItem('lexora_loggedIn');
+            localStorage.removeItem('pendingToken');
+            localStorage.removeItem('pendingEmail');
+            
+            // Redirect to homepage
+            window.location.href = 'index.html';
         });
 
-        // Task completion
+        // Task completion handlers
         document.querySelectorAll('.start-task').forEach(button => {
             button.addEventListener('click', function() {
                 const taskAmount = this.closest('.task-card').querySelector('.task-amount').textContent;
+                const taskTitle = this.closest('.task-card').querySelector('.task-title').textContent;
+                
                 this.textContent = 'Completed!';
                 this.style.background = '#27ae60';
                 this.style.color = 'white';
                 this.disabled = true;
-                alert(`Task completed! ${taskAmount} will be added to your balance.`);
+                
+                // Update completed tasks count
+                const completedTasksEl = document.querySelector('.stat-card:nth-child(2) .stat-number');
+                const currentCount = parseInt(completedTasksEl.textContent);
+                completedTasksEl.textContent = currentCount + 1;
+                
+                // Update available tasks count
+                const availableTasksEl = document.querySelector('.stat-card:nth-child(3) .stat-number');
+                const availableCount = parseInt(availableTasksEl.textContent);
+                availableTasksEl.textContent = availableCount - 1;
+                
+                alert(`Task "${taskTitle}" completed! ${taskAmount} will be added to your balance.`);
             });
         });
 
-        // Start the authentication process when page loads
+        // Start authentication process when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            handleMagicLinkSignIn();
+            handleMagicLinkAuth();
+        });
+
+        // Prevent access if no valid session
+        window.addEventListener('beforeunload', function() {
+            // Optional: Add any cleanup logic here
         });
     </script>
 </body>
