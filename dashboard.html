@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
+        /* Keep all your existing dashboard CSS styles */
         * {
             margin: 0;
             padding: 0;
@@ -240,6 +241,49 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .email-prompt {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .email-prompt-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .email-prompt input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 5px;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+
+        .email-prompt button {
+            background: var(--primary);
+            color: var(--dark);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
     </style>
 </head>
 <body>
@@ -247,6 +291,19 @@
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
         <p>Signing you in...</p>
+    </div>
+
+    <!-- Email Prompt -->
+    <div class="email-prompt" id="emailPrompt" style="display: none;">
+        <div class="email-prompt-box">
+            <h3>Confirm Your Email</h3>
+            <p>Please enter your email address to complete sign-in:</p>
+            <input type="email" id="confirmEmail" placeholder="Enter your email address">
+            <div>
+                <button onclick="confirmEmail()">Sign In</button>
+                <button onclick="cancelSignIn()" style="background: #6c757d; color: white;">Cancel</button>
+            </div>
+        </div>
     </div>
 
     <!-- Sidebar -->
@@ -381,50 +438,85 @@
             document.getElementById('mainContent').style.display = 'block';
         }
 
+        // Handle email confirmation
+        function confirmEmail() {
+            const email = document.getElementById('confirmEmail').value.trim();
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+
+            document.getElementById('emailPrompt').style.display = 'none';
+            document.getElementById('loadingScreen').style.display = 'flex';
+
+            auth.signInWithEmailLink(email, window.location.href)
+                .then((result) => {
+                    // Clear stored email data
+                    window.localStorage.removeItem('emailForSignIn');
+                    window.sessionStorage.removeItem('emailForSignIn');
+                    
+                    showDashboard(result.user);
+                    // Clean URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                })
+                .catch((error) => {
+                    console.error('Error signing in:', error);
+                    alert('Error: ' + error.message);
+                    window.location.href = 'index.html';
+                });
+        }
+
+        function cancelSignIn() {
+            window.location.href = 'index.html';
+        }
+
         // Handle magic link sign-in
         function handleMagicLinkSignIn() {
-            console.log('🔗 Handling magic link sign-in...');
+            console.log('🔗 Checking for magic link...');
             
-            // Check if this is a magic link callback
             if (auth.isSignInWithEmailLink(window.location.href)) {
                 console.log('✅ Magic link detected');
                 
-                let email = window.localStorage.getItem('emailForSignIn');
-                
-                if (!email) {
-                    email = window.prompt('Please provide your email for confirmation:');
-                }
-                
+                // Try to get email from multiple sources
+                const urlParams = new URLSearchParams(window.location.search);
+                let email = urlParams.get('email') || 
+                           window.localStorage.getItem('emailForSignIn') ||
+                           window.sessionStorage.getItem('emailForSignIn');
+
                 if (email) {
-                    console.log('📧 Signing in with email:', email);
+                    console.log('✅ Found email:', email);
+                    document.getElementById('loadingScreen').style.display = 'flex';
                     
                     auth.signInWithEmailLink(email, window.location.href)
                         .then((result) => {
-                            console.log('✅ Successfully signed in!');
+                            // Clear stored email data
                             window.localStorage.removeItem('emailForSignIn');
-                            showDashboard(result.user);
+                            window.sessionStorage.removeItem('emailForSignIn');
                             
-                            // Clean URL - remove magic link parameters
+                            showDashboard(result.user);
+                            // Clean URL
                             window.history.replaceState({}, document.title, window.location.pathname);
                         })
                         .catch((error) => {
                             console.error('❌ Error signing in:', error);
-                            alert('Error signing in: ' + error.message);
-                            window.location.href = 'index.html';
+                            // Show email prompt if automatic sign-in fails
+                            document.getElementById('loadingScreen').style.display = 'none';
+                            document.getElementById('emailPrompt').style.display = 'flex';
                         });
                 } else {
-                    console.log('❌ No email provided');
-                    window.location.href = 'index.html';
+                    console.log('❌ No email found, showing prompt');
+                    // Show email prompt
+                    document.getElementById('emailPrompt').style.display = 'flex';
                 }
             } else {
-                console.log('🔍 Checking existing authentication...');
+                console.log('🔍 No magic link, checking existing auth');
                 // Check if user is already signed in
                 const user = auth.currentUser;
                 if (user) {
-                    console.log('✅ User already signed in:', user.email);
+                    console.log('✅ User already signed in');
                     showDashboard(user);
                 } else {
-                    console.log('❌ No user signed in, redirecting to homepage');
+                    console.log('❌ No user, redirecting to homepage');
                     window.location.href = 'index.html';
                 }
             }
@@ -433,13 +525,8 @@
         // Check authentication state
         auth.onAuthStateChanged((user) => {
             console.log('🔄 Auth state changed:', user ? user.email : 'No user');
-            
             if (user) {
-                // User is signed in
                 showDashboard(user);
-            } else {
-                // User is signed out, try magic link sign-in
-                handleMagicLinkSignIn();
             }
         });
 
@@ -462,8 +549,7 @@
             });
         });
 
-        // Initial check
-        console.log('🚀 Dashboard loading...');
+        // Start the authentication process
         handleMagicLinkSignIn();
     </script>
 </body>
