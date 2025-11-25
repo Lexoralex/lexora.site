@@ -1,476 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Firebase App (core) -->
-<script type="module">
-  // Import Firebase functions
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } 
-    from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-    authDomain: "lexorasite.firebaseapp.com",
-    projectId: "lexorasite",
-    storageBucket: "lexorasite.firebasestorage.app",
-    messagingSenderId: "547338465904",
-    appId: "1:547338465904:web:438631173029042cfdbab5",
-    measurementId: "G-SCX7CQDFYR"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const auth = getAuth(app);
-
-  // Signup function
-  window.signup = function() {
-    const email = document.getElementById('signup-email').value;
-    const password = document.getElementById('signup-password').value;
-
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        document.getElementById('signup-message').innerText = "Signup successful!";
-        console.log(userCredential.user);
-      })
-      .catch((error) => {
-        document.getElementById('signup-message').innerText = error.message;
-      });
-  }
-
-  // Login function
-  window.login = function() {
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
-
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        document.getElementById('login-message').innerText = "Login successful!";
-        console.log(userCredential.user);
-      })
-      .catch((error) => {
-        document.getElementById('login-message').innerText = error.message;
-      });
-  }
-
-  // Track login state
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      console.log("User logged in:", user.email);
-    } else {
-      console.log("No user logged in");
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXORA</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #000;
+        color: #fff;
     }
-  });
 
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lexora – Earn Smarter</title>
+    header {
+        padding: 20px;
+        text-align: center;
+        background-color: #111;
+        border-bottom: 1px solid #444;
+    }
 
-    <!-- STYLES -->
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #0d0d0d;
-            color: white;
-        }
+    header h1 {
+        color: #f9d301;
+        margin: 0;
+    }
 
-        /* NAVBAR */
-        .navbar {
-            background-color: #000;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid gold;
-        }
+    .container {
+        padding: 20px;
+        text-align: center;
+    }
 
-        .navbar a {
-            color: gold;
-            margin-left: 20px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 15px;
-        }
+    /* Login Box */
+    .login-box {
+        background: #111;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 350px;
+        margin: 20px auto;
+        border: 1px solid #f9d301;
+    }
 
-        /* HERO SECTION */
-        .hero {
-            text-align: center;
-            padding: 120px 20px;
-            background: linear-gradient(to bottom, #000, #111);
-        }
+    .login-box input {
+        width: 90%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+    }
 
-        .hero h1 {
-            font-size: 42px;
-            color: gold;
-            margin-bottom: 10px;
-        }
+    .login-btn {
+        width: 90%;
+        padding: 12px;
+        background: #f9d301;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+    }
 
-        .hero p {
-            font-size: 18px;
-            color: #ffffffd0;
-            max-width: 500px;
-            margin: auto;
-        }
+    .login-btn:hover {
+        opacity: 0.9;
+    }
 
-        .btn {
-            display: inline-block;
-            margin-top: 25px;
-            padding: 12px 25px;
-            background-color: gold;
-            color: black;
-            border-radius: 5px;
-            font-weight: bold;
-            text-decoration: none;
-        }
+    /* Content Section */
+    .hero {
+        margin-top: 40px;
+    }
 
-        /* LOGIN SECTION */
-        .login-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            border: 1px solid gold;
-            border-radius: 8px;
-            background-color: black;
-            color: white;
-        }
+    .hero h2 {
+        color: #f9d301;
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
 
-        .login-container h2 {
-            text-align: center;
-            color: gold;
-        }
-
-        .login-container input {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-        }
-
-        .login-container button {
-            width: 100%;
-            padding: 10px;
-            background: gold;
-            color: black;
-            border: none;
-            cursor: pointer;
-        }
-
-        .login-container p {
-            text-align: center;
-            color: white;
-        }
-
-        /* FOOTER */
-        .footer {
-            text-align: center;
-            padding: 20px;
-            border-top: 1px solid #333;
-            color: #999;
-            margin-top: 50px;
-        }
-    </style>
+    .hero p {
+        font-size: 16px;
+        color: #ccc;
+        line-height: 1.6;
+    }
+</style>
 </head>
-<body>
-<h2>Sign Up</h2>
-<input type="email" id="signup-email" placeholder="Email">
-<input type="password" id="signup-password" placeholder="Password">
-<button onclick="signup()">Sign Up</button>
-<p id="signup-message"></p>
 
-<h2>Login</h2>
-<input type="email" id="login-email" placeholder="Email">
-<input type="password" id="login-password" placeholder="Password">
-<button onclick="login()">Login</button>
-<p id="login-message"></p>
-    <!-- NAVBAR -->
-    <div class="navbar">
-        <div style="color:gold; font-size:20px; font-weight:bold;">LEXORA</div>
-        <div>
-            <a href="index.html">Home</a>
-            <a href="about.html">About</a>
-            <a href="how-it-works.html">How It Works</a>
-            <a href="earning-plan.html">Earning Plan</a>
-            <a href="join-us.html">Join Us</a>
-            <a href="contact.html">Contact</a>
-        </div>
+<body>
+
+<header>
+    <h1>LEXORA</h1>
+</header>
+
+<div class="container">
+
+    <!-- Passwordless Login Box -->
+    <div class="login-box">
+        <h2 style="color:#f9d301;">Login</h2>
+        <input id="emailInput" type="email" placeholder="Enter your email">
+        <button id="sendLinkBtn" class="login-btn">Send Magic Link</button>
+        <p style="font-size:13px; color:#aaa; margin-top:10px;">
+            You will receive a login link in your email.
+        </p>
     </div>
 
-    <!-- HERO SECTION -->
+    <!-- Website Content -->
     <div class="hero">
-        <h1>Earn Money the Smart Way</h1>
-        <p>Lexora connects users with surveys, tasks, and rewards. Start your earning journey today with our trusted platform.</p>
-        <a class="btn" href="#login">Get Started</a>
+        <h2>Earn Money the Smart Way</h2>
+        <p>
+            Lexora connects users with surveys, tasks, and rewards.
+            Start your earning journey today with our trusted platform.
+        </p>
     </div>
 
-    <!-- LOGIN SECTION -->
-    <div id="login" class="login-container">
-        <h2>Login via Email Link</h2>
-        <input type="email" id="login-email" placeholder="Enter your email">
-        <button onclick="sendLoginLink()">Send Login Link</button>
-        <p id="login-message"></p>
-    </div>
+</div>
 
-    <!-- FOOTER -->
-    <div class="footer">
-        © 2025 Lexora. All rights reserved.
-    </div>
-
-    <!-- FIREBASE SCRIPT -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink } 
-            from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-            authDomain: "lexorasite.firebaseapp.com",
-            projectId: "lexorasite",
-            storageBucket: "lexorasite.firebasestorage.app",
-            messagingSenderId: "547338465904",
-            appId: "1:547338465904:web:438631173029042cfdbab5",
-            measurementId: "G-SCX7CQDFYR"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        const actionCodeSettings = {
-            url: window.location.origin + '/dashboard.html',
-            handleCodeInApp: true
-        };
-
-        window.sendLoginLink = function() {
-            const email = document.getElementById('login-email').value;
-            sendSignInLinkToEmail(auth, email, actionCodeSettings)
-                .then(() => {
-                    window.localStorage.setItem('emailForSignIn', email);
-                    document.getElementById('login-message').innerText = "Login link sent! Check your email.";
-                })
-                .catch((error) => {
-                    document.getElementById('login-message').innerText = error.message;
-                });
-        }
-
-        if (isSignInWithEmailLink(auth, window.location.href)) {
-            let email = window.localStorage.getItem('emailForSignIn');
-            if (!email) email = window.prompt('Please enter your email for confirmation');
-            signInWithEmailLink(auth, email, window.location.href)
-                .then(() => {
-                    window.localStorage.removeItem('emailForSignIn');
-                    window.location.href = 'dashboard.html';
-                })
-                .catch(error => {
-                    document.getElementById('login-message').innerText = error.message;
-                });
-        }
-    </script>
-
-</body>
-</html>
-dashboard.html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lexora Members Area</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: auto;
-            padding: 30px;
-            background-color: #0d0d0d;
-            color: white;
-        }
-        h1 { color: gold; text-align: center; }
-        button {
-            padding: 10px 20px;
-            margin-top: 20px;
-            background-color: gold;
-            color: black;
-            border: none;
-            cursor: pointer;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid gold;
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #222;
-        }
-    </style>
-</head>
-<body>
-
-<h1>Welcome to Lexora Members Area</h1>
-<p id="welcome-message">Checking login...</p>
-<button onclick="logout()">Logout</button>
-
-<h2>Your Earnings</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Task</th>
-            <th>Amount ($)</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr><td>2025-11-23</td><td>Survey Completion</td><td>10</td></tr>
-        <tr><td>2025-11-22</td><td>Ad Click</td><td>5</td></tr>
-    </tbody>
-</table>
-
+<!-- Firebase -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } 
-        from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { getAuth, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
 
     const firebaseConfig = {
-        apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-        authDomain: "lexorasite.firebaseapp.com",
-        projectId: "lexorasite",
-        storageBucket: "lexorasite.firebasestorage.app",
-        messagingSenderId: "547338465904",
-        appId: "1:547338465904:web:438631173029042cfdbab5",
-        measurementId: "G-SCX7CQDFYR"
+      apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+      authDomain: "lexorasite.firebaseapp.com",
+      projectId: "lexorasite",
+      storageBucket: "lexorasite.firebasestorage.app",
+      messagingSenderId: "547338465904",
+      appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+      measurementId: "G-X3RBR8FKXL"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    onAuthStateChanged(auth, (user) => {
-        if(user) {
-            document.getElementById('welcome-message').innerText = `Hello, ${user.email}!`;
-        } else {
-            window.location.href = 'index.html';
-        }
+    document.getElementById("sendLinkBtn").addEventListener("click", () => {
+        const email = document.getElementById("emailInput").value;
+
+        const actionCodeSettings = {
+            url: "https://lexorasite.web.app/finish.html",
+            handleCodeInApp: true
+        };
+
+        sendSignInLinkToEmail(auth, email, actionCodeSettings)
+            .then(() => {
+                window.localStorage.setItem("emailForSignIn", email);
+                alert("Login link sent to your email!");
+            })
+            .catch((error) => {
+                alert("Error: " + error.message);
+            });
     });
-
-    window.logout = function() {
-        signOut(auth).then(() => {
-            window.location.href = 'index.html';
-        }).catch(error => {
-            alert("Error logging out: " + error.message);
-        });
-    }
-</script>
-
-</body>
-</html>
-cv
-login.html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Passwordless Email Login</title>
-</head>
-<body>
-
-<h2>Passwordless Login</h2>
-<input type="email" id="emailInput" placeholder="Enter your email">
-<button id="sendLinkBtn">Send Login Link</button>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAuth, sendSignInLinkToEmail } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-    authDomain: "lexorasite.firebaseapp.com",
-    projectId: "lexorasite",
-    storageBucket: "lexorasite.firebasestorage.app",
-    messagingSenderId: "547338465904",
-    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
-    measurementId: "G-X3RBR8FKXL"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  document.getElementById("sendLinkBtn").addEventListener("click", () => {
-    const email = document.getElementById("emailInput").value;
-
-    const actionCodeSettings = {
-      url: "https://lexorasite.web.app/finish.html",
-      handleCodeInApp: true
-    };
-
-    sendSignInLinkToEmail(auth, email, actionCodeSettings)
-      .then(() => {
-        window.localStorage.setItem("emailForSignIn", email);
-        alert("Login link sent to your email!");
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
-  });
-</script>
-
-</body>
-</html>
-finish.html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Completing Sign-In</title>
-</head>
-<body>
-
-<h2>Signing you in...</h2>
-
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import {
-    getAuth,
-    signInWithEmailLink,
-    isSignInWithEmailLink
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-    authDomain: "lexorasite.firebaseapp.com",
-    projectId: "lexorasite",
-    storageBucket: "lexorasite.firebasestorage.app",
-    messagingSenderId: "547338465904",
-    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
-    measurementId: "G-X3RBR8FKXL"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  if (isSignInWithEmailLink(auth, window.location.href)) {
-    let email = window.localStorage.getItem("emailForSignIn");
-
-    if (!email) {
-      email = prompt("Please confirm your email:");
-    }
-
-    signInWithEmailLink(auth, email, window.location.href)
-      .then(() => {
-        window.localStorage.removeItem("emailForSignIn");
-        alert("You are signed in!");
-        window.location.href = "/"; // redirect to home
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
-  }
 </script>
 
 </body>
