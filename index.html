@@ -515,18 +515,19 @@
                 <!-- Firebase Setup Instructions -->
                 <div style="margin-top: 2rem; padding: 1.5rem; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 10px; text-align: left;">
                     <h4 style="color: #856404; margin-bottom: 1rem;">
-                        <i class="fas fa-exclamation-triangle"></i> Firebase Setup Required
+                        <i class="fas fa-exclamation-triangle"></i> Firebase Domain Setup Required
                     </h4>
                     <p style="color: #856404; font-size: 0.9rem; margin-bottom: 0.5rem;">
-                        To enable magic links, you need to:
+                        To fix the domain error, add these authorized domains in Firebase:
                     </p>
                     <ol style="color: #856404; font-size: 0.9rem; padding-left: 1.5rem;">
-                        <li>Go to <a href="https://console.firebase.google.com/" target="_blank" style="color: #004085;">Firebase Console</a></li>
-                        <li>Select your project "lexorasite"</li>
-                        <li>Go to Authentication → Sign-in method</li>
-                        <li>Enable "Email/Password" and "Email link"</li>
-                        <li>Click Save</li>
+                        <li><strong>https://lexoralex.github.io</strong></li>
+                        <li><strong>https://lexorasite.web.app</strong></li>
+                        <li><strong>http://localhost</strong> (for testing)</li>
                     </ol>
+                    <p style="color: #856404; font-size: 0.9rem; margin-top: 1rem;">
+                        Go to: Firebase Console → Authentication → Settings → Authorized domains
+                    </p>
                 </div>
             </div>
         </div>
@@ -678,7 +679,8 @@
 
             try {
                 const actionCodeSettings = {
-                    url: window.location.origin + '/dashboard.html',
+                    // Use the exact domain that's authorized in Firebase
+                    url: 'https://lexoralex.github.io/lexora.site/dashboard.html',
                     handleCodeInApp: true
                 };
 
@@ -697,7 +699,9 @@
                 console.error('Error sending magic link:', error);
                 
                 if (error.code === 'auth/operation-not-allowed') {
-                    showStatus('❌ Magic link authentication is not enabled. Please follow the setup instructions above to enable it in Firebase Console.', 'error');
+                    showStatus('❌ Magic link authentication is not enabled. Please enable "Email link" in Firebase Authentication → Sign-in method.', 'error');
+                } else if (error.code === 'auth/unauthorized-continue-uri') {
+                    showStatus('❌ Domain not authorized. Please add "https://lexoralex.github.io" to authorized domains in Firebase Console.', 'error');
                 } else if (error.code === 'auth/invalid-email') {
                     showStatus('❌ Please enter a valid email address.', 'error');
                 } else if (error.code === 'auth/too-many-requests') {
