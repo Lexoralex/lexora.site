@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Completing Sign-In</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Finishing Sign-In...</title>
+  <style>body{background:#000;color:#fff;font-family:Arial;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}</style>
 </head>
 <body>
-
-<h2>Signing you in...</h2>
+  <div>
+    <h2 style="color:#f9d301">Signing you in...</h2>
+    <p style="color:#ccc">Please wait — you will be redirected to your dashboard.</p>
+  </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import {
-    getAuth,
-    signInWithEmailLink,
-    isSignInWithEmailLink
-  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getAuth, isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
@@ -28,25 +29,35 @@
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  if (isSignInWithEmailLink(auth, window.location.href)) {
-    let email = window.localStorage.getItem("emailForSignIn");
-
-    if (!email) {
-      email = prompt("Please confirm your email:");
+  (async ()=>{
+    try{
+      if(isSignInWithEmailLink(auth, window.location.href)){
+        let email = window.localStorage.getItem('emailForSignIn');
+        if(!email){
+          email = window.prompt('Please confirm your email for sign-in:');
+        }
+        const result = await signInWithEmailLink(auth, email, window.location.href);
+        // Optional: create/update user doc in Firestore
+        const uid = result.user.uid;
+        await setDoc(doc(db, 'users', uid), {
+          email: result.user.email,
+          createdAt: new Date().toISOString()
+        }, { merge: true });
+        window.localStorage.removeItem('emailForSignIn');
+        // Redirect to dashboard
+        window.location.href = '/dashboard.html';
+      } else {
+        // Not a sign-in link
+        window.location.href = '/index.html';
+      }
+    }catch(err){
+      console.error(err);
+      alert('Sign-in error: ' + err.message);
+      window.location.href = '/index.html';
     }
-
-    signInWithEmailLink(auth, email, window.location.href)
-      .then(() => {
-        window.localStorage.removeItem("emailForSignIn");
-        alert("You are signed in!");
-        window.location.href = "/"; // redirect to home
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
-  }
+  })();
 </script>
-
 </body>
 </html>
