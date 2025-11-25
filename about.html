@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Dashboard — Lexora</title>
+  <style>
+    body{margin:0;font-family:Inter,Arial;background:#000;color:#fff}
+    .wrap{max-width:1000px;margin:20px auto;padding:18px}
+    header{display:flex;justify-content:space-between;align-items:center}
+    h1{color:#f9d301}
+    .card{background:#0b0b0b;padding:16px;border-radius:10px;border:1px solid #222;margin-top:14px}
+    .btn{padding:10px 14px;border-radius:8px;background:#f9d301;border:none;color:#000;font-weight:700;cursor:pointer}
+    .row{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
+    .col{flex:1;min-width:220px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Dashboard</h1>
+      <div>
+        <span id="userEmail" style="color:#ccc;margin-right:12px"></span>
+        <button id="logoutBtn" class="btn">Logout</button>
+      </div>
+    </header>
+
+    <div class="card">
+      <h3>Your Balance</h3>
+      <p style="font-size:28px;color:var(--yellow = #f9d301)" id="balance">$0.00</p>
+      <p style="color:#aaa">This is a demo balance. Payout methods can be added in settings.</p>
+    </div>
+
+    <div class="row">
+      <div class="col card">
+        <h3>Available Tasks</h3>
+        <p>1) Survey — Earn $0.50</p>
+        <p>2) Quick task — Earn $0.20</p>
+        <button class="btn" id="claimTask">Claim Task</button>
+      </div>
+
+      <div class="col card">
+        <h3>Profile</h3>
+        <p id="profileInfo">Loading profile...</p>
+      </div>
+    </div>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+    authDomain: "lexorasite.firebaseapp.com",
+    projectId: "lexorasite",
+    storageBucket: "lexorasite.firebasestorage.app",
+    messagingSenderId: "547338465904",
+    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+    measurementId: "G-X3RBR8FKXL"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const userEmailEl = document.getElementById('userEmail');
+  const profileInfo = document.getElementById('profileInfo');
+  const balanceEl = document.getElementById('balance');
+
+  onAuthStateChanged(auth, async (user)=>{
+    if(!user){
+      // Not signed in, redirect to home
+      window.location.href = '/index.html';
+      return;
+    }
+    userEmailEl.textContent = user.email;
+    // load user doc
+    const docRef = doc(db, 'users', user.uid);
+    const snap = await getDoc(docRef);
+    const data = snap.exists() ? snap.data() : {};
+    profileInfo.textContent = `Email: ${user.email}\nMember since: ${data.createdAt || '—'}`;
+    // demo balance from document or 0
+    balanceEl.textContent = '$' + ((data.balance || 0).toFixed ? (data.balance).toFixed(2) : '0.00');
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', async ()=>{
+    try{
+      await signOut(auth);
+      window.location.href = '/index.html';
+    }catch(e){alert('Logout failed: ' + e.message)}
+  });
+
+  // quick claim task demo
+  document.getElementById('claimTask').addEventListener('click', async ()=>{
+    const user = auth.currentUser;
+    if(!user){ alert('Please sign in'); return;}
+    const docRef = doc(db, 'users', user.uid);
+    try{
+      await updateDoc(docRef, { balance: ( (Math.random()*2).toFixed(2) * 1 || 0 ) + ( (await (await getDoc(docRef)).data())?.balance || 0 ) });
+      alert('Task claimed (demo). Refresh to see balance.');
+    }catch(err){
+      console.error(err);
+      alert('Task claim failed: ' + err.message);
+    }
+  });
+</script>
+</body>
+</html>
