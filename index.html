@@ -62,10 +62,6 @@
             text-decoration: none;
         }
 
-        .logo i {
-            color: var(--accent);
-        }
-
         .nav-links {
             display: flex;
             gap: 2rem;
@@ -82,21 +78,6 @@
 
         .nav-links a:hover {
             color: var(--primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background: var(--primary);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
         }
 
         .auth-buttons {
@@ -190,6 +171,82 @@
         .stat-label {
             font-size: 1rem;
             opacity: 0.9;
+        }
+
+        /* Quick Login Section */
+        .quick-login {
+            background: white;
+            padding: 80px 0;
+        }
+
+        .login-box {
+            background: var(--light);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .login-box h2 {
+            color: var(--dark);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .login-btn {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(249, 211, 1, 0.4);
+        }
+
+        .signup-link {
+            color: #666;
+        }
+
+        .signup-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
         }
 
         /* Features */
@@ -426,6 +483,40 @@
         </div>
     </section>
 
+    <!-- Quick Login Section -->
+    <section class="quick-login">
+        <div class="container">
+            <div class="login-box">
+                <h2>Member Login</h2>
+                <form id="quickLoginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    </div>
+
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+
+                    <div class="signup-link">
+                        Don't have an account? <a href="register.html">Sign up here</a>
+                    </div>
+
+                    <div style="margin-top: 1rem; padding: 1rem; background: #e9ecef; border-radius: 5px; font-size: 0.9rem;">
+                        <strong>Demo Account:</strong><br>
+                        Email: demo@lexora.com<br>
+                        Password: demo123
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
     <!-- Features Section -->
     <section class="features">
         <div class="container">
@@ -515,6 +606,8 @@
                         <li><a href="how-it-works.html">How It Works</a></li>
                         <li><a href="earning.html">Earning Plans</a></li>
                         <li><a href="contact.html">Contact</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
                     </ul>
                 </div>
 
@@ -557,6 +650,22 @@
         document.querySelector('.mobile-toggle').addEventListener('click', function() {
             const navLinks = document.querySelector('.nav-links');
             navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // Quick login form
+        document.getElementById('quickLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Demo login - in real app, this would connect to your backend
+            if (email === 'demo@lexora.com' && password === 'demo123') {
+                alert('Login successful! Redirecting to dashboard...');
+                window.location.href = 'dashboard.html';
+            } else {
+                alert('Invalid credentials. Try:\nEmail: demo@lexora.com\nPassword: demo123');
+            }
         });
     </script>
 </body>
