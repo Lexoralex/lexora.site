@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexora - Get Paid for Surveys & Ads</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
         * {
             margin: 0;
@@ -834,18 +832,9 @@
     </footer>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-            authDomain: "lexorasite.firebaseapp.com",
-            projectId: "lexorasite",
-            storageBucket: "lexorasite.firebasestorage.app",
-            messagingSenderId: "547338465904",
-            appId: "1:547338465904:web:28a41ac22e86c593fdbab5"
-        };
-        
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
+        // Resend API Configuration
+        const RESEND_API_KEY = 're_29BgFua3_LWLQ5TyH1X1f59bJb8p6YsMH';
+        const RESEND_API_URL = 'https://api.resend.com/emails';
 
         // Show status message
         function showStatus(message, type) {
@@ -853,6 +842,11 @@
             statusEl.textContent = message;
             statusEl.className = 'status-message status-' + type;
             statusEl.style.display = 'block';
+        }
+
+        // Generate a unique token for magic link
+        function generateToken() {
+            return Math.random().toString(36).substring(2) + Date.now().toString(36);
         }
 
         // Magic Link Form Handler
@@ -870,59 +864,113 @@
             sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Magic Link...';
 
             try {
-                const actionCodeSettings = {
-                    url: window.location.origin + '/lexora.site/dashboard.html',
-                    handleCodeInApp: true
-                };
-
+                // Generate unique token
+                const token = generateToken();
+                const magicLink = `${window.location.origin}/dashboard.html?token=${token}&email=${encodeURIComponent(email)}`;
+                
                 console.log('📧 Sending magic link to:', email);
                 
-                await auth.sendSignInLinkToEmail(email, actionCodeSettings);
-                
-                // Store email in MULTIPLE places to ensure it's available
-                window.localStorage.setItem('emailForSignIn', email);
-                window.sessionStorage.setItem('emailForSignIn', email);
-                document.cookie = `emailForSignIn=${email}; path=/; max-age=3600`;
-                
-                console.log('✅ Magic link sent, email stored:', email);
-                
-                showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
-                sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
+                // Send email via Resend API
+                const response = await fetch(RESEND_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${RESEND_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        from: 'Lexora <onboarding@resend.dev>',
+                        to: [email],
+                        subject: 'Your Magic Link to Access Lexora',
+                        html: `
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <style>
+                                    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
+                                    .container { max-width: 600px; background: white; padding: 40px; border-radius: 10px; margin: 0 auto; }
+                                    .header { text-align: center; color: #f9d301; }
+                                    .button { background: #f9d301; color: black; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin: 20px 0; }
+                                    .footer { margin-top: 30px; text-align: center; color: #666; font-size: 14px; }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <div class="header">
+                                        <h1>Welcome to Lexora! 👋</h1>
+                                    </div>
+                                    <p>Hello,</p>
+                                    <p>Click the button below to securely access your Lexora account:</p>
+                                    <div style="text-align: center;">
+                                        <a href="${magicLink}" class="button">Access My Account</a>
+                                    </div>
+                                    <p>Or copy and paste this link in your browser:</p>
+                                    <p><a href="${magicLink}">${magicLink}</a></p>
+                                    <div class="footer">
+                                        <p>This magic link will expire in 15 minutes.</p>
+                                        <p>If you didn't request this, please ignore this email.</p>
+                                        <p>Happy earning! 🎉</p>
+                                    </div>
+                                </div>
+                            </body>
+                            </html>
+                        `
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    console.log('✅ Magic link sent successfully:', data);
+                    
+                    // Store email for verification
+                    localStorage.setItem('pendingEmail', email);
+                    localStorage.setItem('pendingToken', token);
+                    
+                    showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
+                    sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
+                    
+                    // Clear form
+                    document.getElementById('email').value = '';
+                    
+                } else {
+                    throw new Error(data.message || 'Failed to send email');
+                }
                 
             } catch (error) {
-                console.error('❌ Error:', error);
+                console.error('❌ Error sending magic link:', error);
                 showStatus('Error: ' + error.message, 'error');
                 sendBtn.disabled = false;
                 sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
             }
         });
 
-        // Check if we're returning from a magic link
-        if (auth.isSignInWithEmailLink(window.location.href)) {
-            console.log('🔗 Magic link detected in URL');
+        // Check if we have a token in URL (for magic link verification)
+        function checkMagicLink() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const email = urlParams.get('email');
             
-            // Try multiple storage locations for the email
-            let email = window.localStorage.getItem('emailForSignIn') || 
-                       window.sessionStorage.getItem('emailForSignIn') ||
-                       getCookie('emailForSignIn');
-            
-            if (email) {
-                console.log('✅ Found stored email:', email);
-                // Redirect to dashboard with email as parameter
-                window.location.href = 'dashboard.html?email=' + encodeURIComponent(email);
-            } else {
-                console.log('❌ No stored email found');
-                // Let dashboard handle the email prompt
-                window.location.href = 'dashboard.html';
+            if (token && email) {
+                // Verify the token matches what we stored
+                const storedToken = localStorage.getItem('pendingToken');
+                const storedEmail = localStorage.getItem('pendingEmail');
+                
+                if (token === storedToken && email === storedEmail) {
+                    // Successful login - redirect to dashboard
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.removeItem('pendingToken');
+                    localStorage.removeItem('pendingEmail');
+                    
+                    window.location.href = 'dashboard.html';
+                } else {
+                    showStatus('Invalid or expired magic link. Please request a new one.', 'error');
+                }
             }
         }
 
-        // Helper function to get cookie
-        function getCookie(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
+        // Check for magic link on page load
+        checkMagicLink();
 
         // FAQ functionality
         document.querySelectorAll('.faq-question').forEach(button => {
