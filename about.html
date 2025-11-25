@@ -1,110 +1,356 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Dashboard — Lexora</title>
-  <style>
-    body{margin:0;font-family:Inter,Arial;background:#000;color:#fff}
-    .wrap{max-width:1000px;margin:20px auto;padding:18px}
-    header{display:flex;justify-content:space-between;align-items:center}
-    h1{color:#f9d301}
-    .card{background:#0b0b0b;padding:16px;border-radius:10px;border:1px solid #222;margin-top:14px}
-    .btn{padding:10px 14px;border-radius:8px;background:#f9d301;border:none;color:#000;font-weight:700;cursor:pointer}
-    .row{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px}
-    .col{flex:1;min-width:220px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Lexora</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #f9d301;
+            --secondary: #1a1a1a;
+            --accent: #ff6b35;
+            --text: #333;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+
+        body {
+            background: #f8f9fa;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header - Same as index */
+        header {
+            background: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 140px 0 80px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* About Content */
+        .about-content {
+            padding: 80px 0;
+        }
+
+        .mission-vision {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .mission-card, .vision-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .team {
+            background: white;
+            padding: 4rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 3rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-member {
+            text-align: center;
+            padding: 2rem;
+            background: var(--light);
+            border-radius: 10px;
+        }
+
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        /* Footer - Same as index */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .contact-info li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
+    <!-- Header -->
     <header>
-      <h1>Dashboard</h1>
-      <div>
-        <span id="userEmail" style="color:#ccc;margin-right:12px"></span>
-        <button id="logoutBtn" class="btn">Logout</button>
-      </div>
+        <div class="container">
+            <nav class="navbar">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-coins"></i>
+                    LEXORA
+                </a>
+                
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html" style="color: var(--primary);">About</a></li>
+                    <li><a href="how-it-works.html">How It Works</a></li>
+                    <li><a href="earning.html">Earning Plans</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+
+                <div class="auth-buttons">
+                    <a href="login.html" class="btn btn-primary">Login</a>
+                </div>
+            </nav>
+        </div>
     </header>
 
-    <div class="card">
-      <h3>Your Balance</h3>
-      <p style="font-size:28px;color:var(--yellow = #f9d301)" id="balance">$0.00</p>
-      <p style="color:#aaa">This is a demo balance. Payout methods can be added in settings.</p>
-    </div>
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>About Lexora</h1>
+            <p>Connecting opinions with opportunities since 2024</p>
+        </div>
+    </section>
 
-    <div class="row">
-      <div class="col card">
-        <h3>Available Tasks</h3>
-        <p>1) Survey — Earn $0.50</p>
-        <p>2) Quick task — Earn $0.20</p>
-        <button class="btn" id="claimTask">Claim Task</button>
-      </div>
+    <!-- About Content -->
+    <section class="about-content">
+        <div class="container">
+            <div class="mission-vision">
+                <div class="mission-card">
+                    <div class="card-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h2>Our Mission</h2>
+                    <p>To create a fair and transparent platform where every opinion matters and every user gets rewarded for their valuable input. We believe in empowering individuals by monetizing their time and perspectives.</p>
+                </div>
 
-      <div class="col card">
-        <h3>Profile</h3>
-        <p id="profileInfo">Loading profile...</p>
-      </div>
-    </div>
-  </div>
+                <div class="vision-card">
+                    <div class="card-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h2>Our Vision</h2>
+                    <p>To become the world's most trusted platform for market research, connecting millions of users with brands that value authentic feedback and creating economic opportunities for everyone.</p>
+                </div>
+            </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+            <div class="story">
+                <h2 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Our Story</h2>
+                <div style="background: white; padding: 3rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+                        Lexora was founded in 2024 with a simple yet powerful idea: everyone's opinion should be valuable. 
+                        In today's digital age, consumer insights drive business decisions, yet the people providing these 
+                        insights rarely see fair compensation.
+                    </p>
+                    <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">
+                        We built Lexora to bridge this gap - creating a platform where users can earn real money for 
+                        completing surveys, watching advertisements, and participating in market research. Our transparent 
+                        payment system and user-first approach have helped us build a community of over 50,000 active members.
+                    </p>
+                    <p style="font-size: 1.1rem;">
+                        Today, we continue to innovate, adding new earning opportunities and maintaining our commitment 
+                        to fair compensation and excellent user experience.
+                    </p>
+                </div>
+            </div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
-    authDomain: "lexorasite.firebaseapp.com",
-    projectId: "lexorasite",
-    storageBucket: "lexorasite.firebasestorage.app",
-    messagingSenderId: "547338465904",
-    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
-    measurementId: "G-X3RBR8FKXL"
-  };
+            <div class="team">
+                <h2 style="text-align: center; margin-bottom: 1rem; font-size: 2.5rem;">Leadership Team</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 3rem;">The passionate people behind Lexora's success</p>
+                
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Alex Morgan</h3>
+                        <p style="color: var(--primary); font-weight: 600;">Founder & CEO</p>
+                        <p>Visionary leader with 10+ years in tech and market research</p>
+                    </div>
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Sarah Chen</h3>
+                        <p style="color: var(--primary); font-weight: 600;">CTO</p>
+                        <p>Technology expert ensuring platform security and scalability</p>
+                    </div>
 
-  const userEmailEl = document.getElementById('userEmail');
-  const profileInfo = document.getElementById('profileInfo');
-  const balanceEl = document.getElementById('balance');
+                    <div class="team-member">
+                        <div class="member-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h3>Mike Rodriguez</h3>
+                        <p style="color: var(--primary); font-weight: 600;">Head of Operations</p>
+                        <p>Ensuring smooth user experience and support operations</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  onAuthStateChanged(auth, async (user)=>{
-    if(!user){
-      // Not signed in, redirect to home
-      window.location.href = '/index.html';
-      return;
-    }
-    userEmailEl.textContent = user.email;
-    // load user doc
-    const docRef = doc(db, 'users', user.uid);
-    const snap = await getDoc(docRef);
-    const data = snap.exists() ? snap.data() : {};
-    profileInfo.textContent = `Email: ${user.email}\nMember since: ${data.createdAt || '—'}`;
-    // demo balance from document or 0
-    balanceEl.textContent = '$' + ((data.balance || 0).toFixed ? (data.balance).toFixed(2) : '0.00');
-  });
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact Support</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>lexoralexhelp@gmail.com</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>24/7 Support Available</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-reply"></i>
+                            <span>Response Time: Under 2 hours</span>
+                        </li>
+                    </ul>
+                </div>
 
-  document.getElementById('logoutBtn').addEventListener('click', async ()=>{
-    try{
-      await signOut(auth);
-      window.location.href = '/index.html';
-    }catch(e){alert('Logout failed: ' + e.message)}
-  });
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="how-it-works.html">How It Works</a></li>
+                        <li><a href="earning.html">Earning Plans</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
 
-  // quick claim task demo
-  document.getElementById('claimTask').addEventListener('click', async ()=>{
-    const user = auth.currentUser;
-    if(!user){ alert('Please sign in'); return;}
-    const docRef = doc(db, 'users', user.uid);
-    try{
-      await updateDoc(docRef, { balance: ( (Math.random()*2).toFixed(2) * 1 || 0 ) + ( (await (await getDoc(docRef)).data())?.balance || 0 ) });
-      alert('Task claimed (demo). Refresh to see balance.');
-    }catch(err){
-      console.error(err);
-      alert('Task claim failed: ' + err.message);
-    }
-  });
-</script>
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2024 Lexora. All rights reserved. | Making opinions valuable worldwide</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
