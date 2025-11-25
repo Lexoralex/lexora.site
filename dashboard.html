@@ -8,7 +8,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
-        /* Keep all your existing dashboard CSS styles */
         * {
             margin: 0;
             padding: 0;
@@ -284,24 +283,34 @@
             cursor: pointer;
             margin: 0 0.5rem;
         }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1rem 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <!-- Loading Screen -->
     <div class="loading-screen" id="loadingScreen">
         <div class="loading-spinner"></div>
-        <p>Signing you in...</p>
+        <p id="loadingText">Signing you in...</p>
     </div>
 
     <!-- Email Prompt -->
     <div class="email-prompt" id="emailPrompt" style="display: none;">
         <div class="email-prompt-box">
             <h3>Confirm Your Email</h3>
-            <p>Please enter your email address to complete sign-in:</p>
+            <p>Please enter the same email address you used to request the magic link:</p>
             <input type="email" id="confirmEmail" placeholder="Enter your email address">
-            <div>
+            <div id="emailError" class="error-message" style="display: none;"></div>
+            <div style="margin-top: 1rem;">
                 <button onclick="confirmEmail()">Sign In</button>
-                <button onclick="cancelSignIn()" style="background: #6c757d; color: white;">Cancel</button>
+                <button onclick="cancelSignIn()" style="background: #6c757d; color: white;">Get New Link</button>
             </div>
         </div>
     </div>
@@ -427,6 +436,8 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
+        let magicLinkUsed = false;
+
         // Show dashboard content
         function showDashboard(user) {
             document.getElementById('userEmail').textContent = user.email;
@@ -438,35 +449,67 @@
             document.getElementById('mainContent').style.display = 'block';
         }
 
+        // Show error message
+        function showError(message) {
+            const errorEl = document.getElementById('emailError');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+        }
+
+        // Hide error message
+        function hideError() {
+            document.getElementById('emailError').style.display = 'none';
+        }
+
         // Handle email confirmation
         function confirmEmail() {
             const email = document.getElementById('confirmEmail').value.trim();
             if (!email) {
-                alert('Please enter your email address');
+                showError('Please enter your email address');
                 return;
             }
 
+            hideError();
             document.getElementById('emailPrompt').style.display = 'none';
             document.getElementById('loadingScreen').style.display = 'flex';
+            document.getElementById('loadingText').textContent = 'Signing you in...';
+
+            // Clear any stored email to prevent conflicts
+            window.localStorage.removeItem('emailForSignIn');
+            window.sessionStorage.removeItem('emailForSignIn');
 
             auth.signInWithEmailLink(email, window.location.href)
                 .then((result) => {
-                    // Clear stored email data
-                    window.localStorage.removeItem('emailForSignIn');
-                    window.sessionStorage.removeItem('emailForSignIn');
+                    console.log('✅ Successfully signed in with magic link');
+                    magicLinkUsed = true;
+                    
+                    // Clean URL - remove magic link parameters
+                    window.history.replaceState({}, document.title, window.location.pathname);
                     
                     showDashboard(result.user);
-                    // Clean URL
-                    window.history.replaceState({}, document.title, window.location.pathname);
                 })
                 .catch((error) => {
-                    console.error('Error signing in:', error);
-                    alert('Error: ' + error.message);
-                    window.location.href = 'index.html';
+                    console.error('❌ Error signing in:', error);
+                    
+                    let errorMessage = 'Error signing in: ' + error.message;
+                    
+                    if (error.code === 'auth/invalid-action-code') {
+                        errorMessage = 'This magic link has expired or was already used. Please request a new one.';
+                    } else if (error.code === 'auth/expired-action-code') {
+                        errorMessage = 'This magic link has expired. Please request a new one.';
+                    } else if (error.code === 'auth/user-disabled') {
+                        errorMessage = 'This account has been disabled.';
+                    }
+                    
+                    // Show error and prompt again
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('emailPrompt').style.display = 'flex';
+                    showError(errorMessage);
                 });
         }
 
         function cancelSignIn() {
+            // Redirect to homepage to get a new magic link
             window.location.href = 'index.html';
         }
 
@@ -475,7 +518,7 @@
             console.log('🔗 Checking for magic link...');
             
             if (auth.isSignInWithEmailLink(window.location.href)) {
-                console.log('✅ Magic link detected');
+                console.log('✅ Magic link detected in URL');
                 
                 // Try to get email from multiple sources
                 const urlParams = new URLSearchParams(window.location.search);
@@ -484,39 +527,54 @@
                            window.sessionStorage.getItem('emailForSignIn');
 
                 if (email) {
-                    console.log('✅ Found email:', email);
+                    console.log('✅ Found stored email:', email);
                     document.getElementById('loadingScreen').style.display = 'flex';
+                    document.getElementById('loadingText').textContent = 'Signing you in...';
                     
+                    // Clear stored email immediately to prevent reuse
+                    window.localStorage.removeItem('emailForSignIn');
+                    window.sessionStorage.removeItem('emailForSignIn');
+
                     auth.signInWithEmailLink(email, window.location.href)
                         .then((result) => {
-                            // Clear stored email data
-                            window.localStorage.removeItem('emailForSignIn');
-                            window.sessionStorage.removeItem('emailForSignIn');
+                            console.log('✅ Successfully signed in automatically');
+                            magicLinkUsed = true;
                             
-                            showDashboard(result.user);
                             // Clean URL
                             window.history.replaceState({}, document.title, window.location.pathname);
+                            showDashboard(result.user);
                         })
                         .catch((error) => {
-                            console.error('❌ Error signing in:', error);
-                            // Show email prompt if automatic sign-in fails
+                            console.error('❌ Automatic sign-in failed:', error);
+                            
+                            // Show email prompt for manual entry
                             document.getElementById('loadingScreen').style.display = 'none';
                             document.getElementById('emailPrompt').style.display = 'flex';
+                            
+                            if (email) {
+                                // Pre-fill the email input
+                                document.getElementById('confirmEmail').value = email;
+                            }
+                            
+                            if (error.code === 'auth/invalid-action-code') {
+                                showError('This link has expired. Please request a new magic link.');
+                            }
                         });
                 } else {
-                    console.log('❌ No email found, showing prompt');
-                    // Show email prompt
+                    console.log('❌ No stored email found, showing prompt');
+                    // Show email prompt for manual entry
                     document.getElementById('emailPrompt').style.display = 'flex';
                 }
             } else {
-                console.log('🔍 No magic link, checking existing auth');
+                console.log('🔍 No magic link detected, checking existing auth');
                 // Check if user is already signed in
                 const user = auth.currentUser;
                 if (user) {
-                    console.log('✅ User already signed in');
+                    console.log('✅ User already signed in:', user.email);
                     showDashboard(user);
                 } else {
-                    console.log('❌ No user, redirecting to homepage');
+                    console.log('❌ No user found, redirecting to homepage');
+                    // No magic link and no user - go to homepage
                     window.location.href = 'index.html';
                 }
             }
@@ -525,7 +583,8 @@
         // Check authentication state
         auth.onAuthStateChanged((user) => {
             console.log('🔄 Auth state changed:', user ? user.email : 'No user');
-            if (user) {
+            if (user && !magicLinkUsed) {
+                // User is signed in (possibly from previous session)
                 showDashboard(user);
             }
         });
@@ -549,8 +608,10 @@
             });
         });
 
-        // Start the authentication process
-        handleMagicLinkSignIn();
+        // Start the authentication process when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            handleMagicLinkSignIn();
+        });
     </script>
 </body>
 </html>
