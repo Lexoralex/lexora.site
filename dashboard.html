@@ -5,14 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Lexora</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    
     <style>
-        /* Add all the dashboard CSS styles from previous response here */
-        /* ... (include the full dashboard CSS) ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #f9d301;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --sidebar: #2c3e50;
+        }
+
+        body {
+            background: #ecf0f1;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: var(--sidebar);
+            color: white;
+            width: 250px;
+            padding: 2rem 0;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid #34495e;
+            margin-bottom: 1rem;
+        }
+
+        .logo a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #34495e;
+            color: white;
+            border-left: 4px solid var(--primary);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card.primary {
+            background: linear-gradient(135deg, var(--primary), #f9c301);
+            color: var(--dark);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .tasks-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .task-card {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .task-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .task-amount {
+            background: var(--primary);
+            color: var(--dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .start-task {
+            background: var(--primary);
+            color: var(--dark);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -38,9 +236,6 @@
             <li><a href="withdraw.html">
                 <i class="fas fa-wallet"></i> Withdraw Funds
             </a></li>
-            <li><a href="profile.html">
-                <i class="fas fa-user"></i> Profile
-            </a></li>
         </ul>
     </nav>
 
@@ -52,7 +247,7 @@
                 <div class="user-avatar" id="userAvatar">U</div>
                 <div>
                     <div style="font-weight: 600;" id="userEmail">Loading...</div>
-                    <div style="font-size: 0.8rem; color: #666;">Premium Member</div>
+                    <div style="font-size: 0.8rem; color: #666;">Member</div>
                 </div>
             </div>
             <button class="logout-btn" id="logoutBtn">
@@ -60,8 +255,69 @@
             </button>
         </div>
 
-        <!-- Rest of dashboard content remains the same -->
-        <!-- ... (include the full dashboard HTML) ... -->
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-number">$0.00</div>
+                <div class="stat-label">Available Balance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-number">0</div>
+                <div class="stat-label">Tasks Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="stat-number">5</div>
+                <div class="stat-label">Available Tasks</div>
+            </div>
+        </div>
+
+        <!-- Available Tasks -->
+        <section class="tasks-section">
+            <h2>Available Tasks</h2>
+            <div class="tasks-grid">
+                <div class="task-card">
+                    <div class="task-header">
+                        <div>
+                            <div class="task-title">Quick Survey - Shopping Habits</div>
+                            <div style="color: #666; font-size: 0.9rem;">5-minute survey about your shopping preferences</div>
+                        </div>
+                        <div class="task-amount">$1.50</div>
+                    </div>
+                    <button class="start-task">Start Survey</button>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <div>
+                            <div class="task-title">Watch Ad - Tech Product</div>
+                            <div style="color: #666; font-size: 0.9rem;">Watch a 2-minute video advertisement</div>
+                        </div>
+                        <div class="task-amount">$0.75</div>
+                    </div>
+                    <button class="start-task">Watch Ad</button>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <div>
+                            <div class="task-title">Product Review - Mobile App</div>
+                            <div style="color: #666; font-size: 0.9rem;">Test and review a new mobile application</div>
+                        </div>
+                        <div class="task-amount">$3.00</div>
+                    </div>
+                    <button class="start-task">Start Review</button>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script>
@@ -72,23 +328,19 @@
             projectId: "lexorasite",
             storageBucket: "lexorasite.firebasestorage.app",
             messagingSenderId: "547338465904",
-            appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
-            measurementId: "G-X3RBR8FKXL"
+            appId: "1:547338465904:web:28a41ac22e86c593fdbab5"
         };
 
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Check authentication state
+        // Check authentication
         auth.onAuthStateChanged((user) => {
             if (user) {
                 // User is signed in
                 document.getElementById('userEmail').textContent = user.email;
                 document.getElementById('userAvatar').textContent = user.email.charAt(0).toUpperCase();
-                
-                // Update user info in dashboard
-                console.log('User signed in:', user.email);
             } else {
                 // User is signed out, redirect to login
                 window.location.href = 'index.html';
@@ -99,29 +351,18 @@
         document.getElementById('logoutBtn').addEventListener('click', () => {
             auth.signOut().then(() => {
                 window.location.href = 'index.html';
-            }).catch((error) => {
-                console.error('Logout error:', error);
             });
         });
 
-        // Task completion simulation (same as before)
+        // Task completion
         document.querySelectorAll('.start-task').forEach(button => {
             button.addEventListener('click', function() {
-                const taskCard = this.closest('.task-card');
-                const taskTitle = taskCard.querySelector('.task-title').textContent;
-                const taskAmount = taskCard.querySelector('.task-amount').textContent;
-                
-                if (confirm(`Start this task: ${taskTitle} for ${taskAmount}?`)) {
-                    this.textContent = 'Processing...';
-                    this.disabled = true;
-                    
-                    setTimeout(() => {
-                        alert(`Task completed! ${taskAmount} has been added to your balance.`);
-                        this.textContent = 'Completed ✓';
-                        this.style.background = '#27ae60';
-                        this.style.color = 'white';
-                    }, 2000);
-                }
+                const taskAmount = this.closest('.task-card').querySelector('.task-amount').textContent;
+                this.textContent = 'Completed!';
+                this.style.background = '#27ae60';
+                this.style.color = 'white';
+                this.disabled = true;
+                alert(`Task completed! ${taskAmount} will be added to your balance.`);
             });
         });
     </script>
