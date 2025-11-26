@@ -1,55 +1,75 @@
 const { Resend } = require('resend');
 
-const resend = new Resend('re_29BgFua3_LWLQ5TyH1X1f59bJb8p6YsMH');
+// Use environment variable for API key
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 exports.handler = async (event) => {
+  // Check HTTP method
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
+    return { 
+      statusCode: 405, 
+      body: JSON.stringify({ error: 'Method not allowed' }) 
+    };
   }
 
   try {
     const { email, token } = JSON.parse(event.body);
     
     if (!email) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'Email is required' }) };
+      return { 
+        statusCode: 400, 
+        body: JSON.stringify({ error: 'Email is required' }) 
+      };
+    }
+    
+    if (!token) {
+      return { 
+        statusCode: 400, 
+        body: JSON.stringify({ error: 'Token is required' }) 
+      };
     }
 
-    // Use your actual domain here - replace with your Netlify domain later
+    // Create magic link - replace with your actual domain
     const magicLink = `https://your-lexora-site.netlify.app/dashboard.html?token=${token}&email=${encodeURIComponent(email)}`;
-    
-    // Send email via Resend
+
+    // Send email using Resend
     const { data, error } = await resend.emails.send({
       from: 'Lexora <onboarding@resend.dev>',
       to: [email],
-      subject: 'Your Magic Link to Access Lexora',
+      subject: 'Your Magic Login Link',
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #f9d301; text-align: center;">Welcome to Lexora! 🎉</h1>
-          <p>Click the button below to access your account:</p>
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="${magicLink}" style="background: #f9d301; color: black; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-              Access My Account
-            </a>
-          </div>
-          <p>Or copy this link: ${magicLink}</p>
-          <p><em>This link expires in 15 minutes</em></p>
-        </div>
+        <h2>Your Magic Login Link</h2>
+        <p>Click the link below to access your dashboard:</p>
+        <a href="${magicLink}" style="background-color: #0070f3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+          Access Dashboard
+        </a>
+        <p>Or copy and paste this URL:</p>
+        <p>${magicLink}</p>
+        <p><small>This link will expire in 15 minutes.</small></p>
       `
     });
 
     if (error) {
-      return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+      console.error('Resend error:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Failed to send email' })
+      };
     }
 
     return {
       statusCode: 200,
       body: JSON.stringify({ 
-        success: true, 
-        message: 'Magic link sent successfully!' 
+        message: 'Magic link sent successfully',
+        emailId: data.id 
       })
     };
 
   } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'Failed to send email' }) };
+    console.error('Function error:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Internal server error' })
+    };
   }
 };
