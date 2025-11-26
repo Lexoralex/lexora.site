@@ -27,7 +27,7 @@ exports.handler = async (event) => {
     }
 
     // FIX: Update this to your actual domain
-    const magicLink = `https://your-lexora-site.netlify.app/dashboard.html?token=${token}&email=${encodeURIComponent(email)}`;
+    const magicLink = `https://loxerabackend.netlify.app/dashboard.html?token=${token}&email=${encodeURIComponent(email)}`;
 
     const { data, error } = await resend.emails.send({
       from: 'Lexora <onboarding@resend.dev>',
