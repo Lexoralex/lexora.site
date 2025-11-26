@@ -1,555 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Lexora - Get Paid for Surveys & Ads</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        :root {
-            --primary: #f9d301;
-            --secondary: #1a1a1a;
-            --accent: #ff6b35;
-            --text: #333;
-            --light: #f8f9fa;
-            --dark: #212529;
-        }
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 600;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background: var(--primary);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .auth-buttons {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: var(--dark);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(249, 211, 1, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--dark);
-            border: 2px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 160px 0 80px;
-            text-align: center;
-            color: white;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 1rem;
-            opacity: 0.9;
-        }
-
-        /* Magic Link Login Section */
-        .magic-login {
-            background: white;
-            padding: 80px 0;
-        }
-
-        .login-box {
-            background: var(--light);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            max-width: 500px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .login-box h2 {
-            color: var(--dark);
-            margin-bottom: 1rem;
-        }
-
-        .login-box p {
-            color: #666;
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        .magic-btn {
-            background: var(--primary);
-            color: var(--dark);
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-
-        .magic-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(249, 211, 1, 0.4);
-        }
-
-        .magic-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .status-message {
-            padding: 1rem;
-            border-radius: 10px;
-            margin: 1rem 0;
-            text-align: center;
-            display: none;
-        }
-
-        .status-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status-error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .status-info {
-            background: #cce7ff;
-            color: #004085;
-            border: 1px solid #b3d7ff;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 80px 0;
-            background: white;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 3rem;
-            color: var(--dark);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .feature-card {
-            background: var(--light);
-            padding: 2rem;
-            border-radius: 15px;
-            text-align: center;
-            transition: transform 0.3s;
-            border: 1px solid #e9ecef;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        /* How It Works Section */
-        .how-it-works {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .step {
-            text-align: center;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .step-number {
-            background: var(--primary);
-            color: var(--dark);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 1rem;
-        }
-
-        /* Testimonials */
-        .testimonials {
-            padding: 80px 0;
-            background: white;
-        }
-
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .testimonial-card {
-            background: var(--light);
-            padding: 2rem;
-            border-radius: 15px;
-            border: 1px solid #e9ecef;
-            position: relative;
-        }
-
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 1rem;
-            color: #666;
-        }
-
-        .testimonial-author {
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .testimonial-role {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* FAQ Section */
-        .faq {
-            padding: 80px 0;
-            background: var(--light);
-        }
-
-        .faq-item {
-            background: white;
-            margin-bottom: 1rem;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .faq-question {
-            padding: 1.5rem;
-            background: white;
-            border: none;
-            width: 100%;
-            text-align: left;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .faq-answer {
-            padding: 0 1.5rem;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .faq-answer.active {
-            padding: 1.5rem;
-            max-height: 500px;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 60px 0 20px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-            margin-bottom: 3rem;
-        }
-
-        .footer-section h3 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links a {
-            color: #adb5bd;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .contact-info {
-            list-style: none;
-        }
-
-        .contact-info li {
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .contact-info i {
-            color: var(--primary);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .social-links a {
-            color: #adb5bd;
-            font-size: 1.2rem;
-            transition: color 0.3s;
-        }
-
-        .social-links a:hover {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid #495057;
-            color: #adb5bd;
-        }
-
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--dark);
-            cursor: pointer;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .mobile-toggle {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .auth-buttons {
-                display: none;
-            }
-        }
+        /* Your existing styles here (unchanged) */
+        /* ... (omitted for brevity, keep all your styles as they were) ... */
     </style>
 </head>
 <body>
@@ -624,12 +82,12 @@
                 <h2>Sign In to Lexora</h2>
                 <p>Enter your email and we'll send you a secure magic link to access your account!</p>
                 
-                <div id="statusMessage" class="status-message"></div>
+                <div id="statusMessage" class="status-message" style="display:none;"></div>
 
                 <form id="magicLinkForm">
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                        <input type="email" id="email" name="email" required placeholder="Enter your email address"/>
                     </div>
 
                     <button type="submit" class="magic-btn" id="sendLinkBtn">
@@ -640,328 +98,70 @@
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features">
-        <div class="container">
-            <h2 class="section-title">Why Choose Lexora?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-dollar-sign"></i>
-                    </div>
-                    <h3>High Payouts</h3>
-                    <p>Earn up to $50 per survey and $0.50 per ad view. The highest rates in the industry.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Instant Payments</h3>
-                    <p>Get paid instantly via PayPal, bank transfer, or cryptocurrency. No waiting periods.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3>100% Secure</h3>
-                    <p>Your data is protected with bank-level security. We never share your personal information.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-mobile-alt"></i>
-                    </div>
-                    <h3>Mobile Friendly</h3>
-                    <p>Earn money anywhere, anytime with our mobile-optimized platform.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Continue with the rest of your sections as they were (Features, How It Works, Testimonials, FAQ, Footer) -->
+    <!-- ... your unchanged content ... -->
 
-    <!-- How It Works Section -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="container">
-            <h2 class="section-title" style="color: white;">How Lexora Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Sign Up Free</h3>
-                    <p>Create your account in 30 seconds. No credit card required.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Complete Tasks</h3>
-                    <p>Choose from surveys, ad views, or product testing tasks.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>Earn Money</h3>
-                    <p>Get paid for each completed task. Payouts start at $5.</p>
-                </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Withdraw Funds</h3>
-                    <p>Cash out instantly via your preferred payment method.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials">
-        <div class="container">
-            <h2 class="section-title">What Our Users Say</h2>
-            <div class="testimonial-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "I've earned over $500 in just two months! Lexora made it so easy to make extra money in my free time."
-                    </div>
-                    <div class="testimonial-author">Sarah M.</div>
-                    <div class="testimonial-role">College Student</div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "The magic link login is genius! No passwords to remember and I get paid faster than any other platform."
-                    </div>
-                    <div class="testimonial-author">Mike R.</div>
-                    <div class="testimonial-role">Freelancer</div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-text">
-                        "As a stay-at-home parent, Lexora gives me the flexibility to earn money while taking care of my kids."
-                    </div>
-                    <div class="testimonial-author">Jennifer K.</div>
-                    <div class="testimonial-role">Parent</div>
-                </div>
-            </div>
-        </div>
-    </section>
+<script>
+  // Your Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+    authDomain: "lexorasite.firebaseapp.com",
+    projectId: "lexorasite",
+    storageBucket: "lexorasite.firebasestorage.app",
+    messagingSenderId: "547338465904",
+    appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+    measurementId: "G-X3RBR8FKXL"
+  };
 
-    <!-- FAQ Section -->
-    <section class="faq">
-        <div class="container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <div class="faq-item">
-                <button class="faq-question">
-                    How much can I really earn?
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="faq-answer">
-                    <p>Active users typically earn between $50-$500 per month depending on the tasks they complete. Surveys pay $0.50-$50 each, and ad views pay $0.10-$2 each.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question">
-                    How do I get paid?
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="faq-answer">
-                    <p>We offer multiple payment methods including PayPal, bank transfer, and gift cards. Payments are processed within 24 hours once you reach the $5 minimum threshold.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <button class="faq-question">
-                    Is there any fee to join?
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-                <div class="faq-answer">
-                    <p>No! Lexora is completely free to join. We never charge any registration fees, membership fees, or hidden charges.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>About Lexora</h3>
-                    <p>Lexora is a premier platform connecting users with paid surveys, advertisements, and market research opportunities.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
+  // Where the magic link redirects to (finish-signin page you must create)
+  const actionCodeSettings = {
+    url: "https://lexoralex.github.io/lexora.site/finish-signin.html",
+    handleCodeInApp: true,
+  };
 
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="how-it-works.html">How It Works</a></li>
-                        <li><a href="earning.html">Earning Plans</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                    </ul>
-                </div>
+  const form = document.getElementById('magicLinkForm');
+  const statusMessage = document.getElementById('statusMessage');
+  const sendLinkBtn = document.getElementById('sendLinkBtn');
 
-                <div class="footer-section">
-                    <h3>Contact Info</h3>
-                    <ul class="contact-info">
-                        <li>
-                            <i class="fas fa-envelope"></i>
-                            <span>lexoralexhelp@gmail.com</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-clock"></i>
-                            <span>24/7 Customer Support</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-globe"></i>
-                            <span>Worldwide Service</span>
-                        </li>
-                    </ul>
-                </div>
+  function showStatus(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = 'status-message status-' + type;
+    statusMessage.style.display = 'block';
+  }
 
-                <div class="footer-section">
-                    <h3>Legal</h3>
-                    <ul class="footer-links">
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="cookies.html">Cookie Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2024 Lexora. All rights reserved. | Making the world's opinions valuable.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script>
-        // Resend API Configuration
-        const RESEND_API_KEY = 're_29BgFua3_LWLQ5TyH1X1f59bJb8p6YsMH';
-        const RESEND_API_URL = 'https://api.resend.com/emails';
-
-        // Show status message
-        function showStatus(message, type) {
-            const statusEl = document.getElementById('statusMessage');
-            statusEl.textContent = message;
-            statusEl.className = 'status-message status-' + type;
-            statusEl.style.display = 'block';
-        }
-
-        // Generate a unique token for magic link
-        function generateToken() {
-            return Math.random().toString(36).substring(2) + Date.now().toString(36);
-        }
-
-        // // Magic Link Form Handler
-document.getElementById('magicLinkForm').addEventListener('submit', async function(e) {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
     const email = document.getElementById('email').value.trim();
-    const sendBtn = document.getElementById('sendLinkBtn');
-    
+
     if (!email) {
-        showStatus('Please enter your email address.', 'error');
-        return;
+      showStatus('Please enter your email address.', 'error');
+      return;
     }
-    
-    // Disable button and show loading state
-    sendBtn.disabled = true;
-    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Magic Link...';
-    
+
+    sendLinkBtn.disabled = true;
+    sendLinkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending magic link...';
+
     try {
-        // Generate unique token
-        const token = generateToken();
-        
-        // Store email and token for verification
-        localStorage.setItem('pendingEmail', email);
-        localStorage.setItem('pendingToken', token);
-        
-        console.log('📧 Sending magic link to:', email);
-        
-        // This calls your Netlify function, which uses Resend
-        const response = await fetch('/.netlify/functions/send-magic-link', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, token })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log('✅ Magic link sent successfully');
-            
-            showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
-            sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
-            
-            // Clear form
-            document.getElementById('email').value = '';
-            
-        } else {
-            throw new Error(data.error || 'Failed to send magic link');
-        }
-        
+      await auth.sendSignInLinkToEmail(email, actionCodeSettings);
+      window.localStorage.setItem('emailForSignIn', email);
+      showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
+      sendLinkBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
+      form.reset();
     } catch (error) {
-        console.error('❌ Error sending magic link:', error);
-        showStatus('Error: ' + error.message, 'error');
-        sendBtn.disabled = false;
-        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
+      console.error(error);
+      showStatus('Error: ' + error.message, 'error');
+      sendLinkBtn.disabled = false;
+      sendLinkBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
     }
-});
+  });
+</script>
 
-        // Check if we have a token in URL (for magic link verification)
-        function checkMagicLink() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            const email = urlParams.get('email');
-            
-            if (token && email) {
-                // Verify the token matches what we stored
-                const storedToken = localStorage.getItem('pendingToken');
-                const storedEmail = localStorage.getItem('pendingEmail');
-                
-                if (token === storedToken && email === storedEmail) {
-                    // Successful login - redirect to dashboard
-                    localStorage.setItem('userEmail', email);
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.removeItem('pendingToken');
-                    localStorage.removeItem('pendingEmail');
-                    
-                    window.location.href = 'dashboard.html';
-                } else {
-                    showStatus('Invalid or expired magic link. Please request a new one.', 'error');
-                }
-            }
-        }
-
-        // Check for magic link on page load
-        checkMagicLink();
-
-        // FAQ functionality
-        document.querySelectorAll('.faq-question').forEach(button => {
-            button.addEventListener('click', () => {
-                const answer = button.nextElementSibling;
-                const isActive = answer.classList.contains('active');
-                
-                // Close all answers
-                document.querySelectorAll('.faq-answer').forEach(ans => {
-                    ans.classList.remove('active');
-                });
-                document.querySelectorAll('.faq-question').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                // Open current if not active
-                if (!isActive) {
-                    answer.classList.add('active');
-                    button.classList.add('active');
-                }
-            });
-        });
-
-        // Mobile menu toggle
-        document.querySelector('.mobile-toggle').addEventListener('click', function() {
-            const navLinks = document.querySelector('.nav-links');
-            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-        });
-    </script>
 </body>
 </html>
