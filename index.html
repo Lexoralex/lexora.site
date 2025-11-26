@@ -849,100 +849,63 @@
             return Math.random().toString(36).substring(2) + Date.now().toString(36);
         }
 
-        // Magic Link Form Handler
-        document.getElementById('magicLinkForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value.trim();
-            const sendBtn = document.getElementById('sendLinkBtn');
-            
-            if (!email) {
-                showStatus('Please enter your email address.', 'error');
-                return;
-            }
-
-            sendBtn.disabled = true;
-            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Magic Link...';
-
-            try {
-                // Generate unique token
-                const token = generateToken();
-                const magicLink = `${window.location.origin}/dashboard.html?token=${token}&email=${encodeURIComponent(email)}`;
-                
-                console.log('📧 Sending magic link to:', email);
-                
-                // Send email via Resend API
-                const response = await fetch(RESEND_API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${RESEND_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        from: 'Lexora <onboarding@resend.dev>',
-                        to: [email],
-                        subject: 'Your Magic Link to Access Lexora',
-                        html: `
-                            <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <style>
-                                    body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-                                    .container { max-width: 600px; background: white; padding: 40px; border-radius: 10px; margin: 0 auto; }
-                                    .header { text-align: center; color: #f9d301; }
-                                    .button { background: #f9d301; color: black; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold; margin: 20px 0; }
-                                    .footer { margin-top: 30px; text-align: center; color: #666; font-size: 14px; }
-                                </style>
-                            </head>
-                            <body>
-                                <div class="container">
-                                    <div class="header">
-                                        <h1>Welcome to Lexora! 👋</h1>
-                                    </div>
-                                    <p>Hello,</p>
-                                    <p>Click the button below to securely access your Lexora account:</p>
-                                    <div style="text-align: center;">
-                                        <a href="${magicLink}" class="button">Access My Account</a>
-                                    </div>
-                                    <p>Or copy and paste this link in your browser:</p>
-                                    <p><a href="${magicLink}">${magicLink}</a></p>
-                                    <div class="footer">
-                                        <p>This magic link will expire in 15 minutes.</p>
-                                        <p>If you didn't request this, please ignore this email.</p>
-                                        <p>Happy earning! 🎉</p>
-                                    </div>
-                                </div>
-                            </body>
-                            </html>
-                        `
-                    })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    console.log('✅ Magic link sent successfully:', data);
-                    
-                    // Store email for verification
-                    localStorage.setItem('pendingEmail', email);
-                    localStorage.setItem('pendingToken', token);
-                    
-                    showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
-                    sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
-                    
-                    // Clear form
-                    document.getElementById('email').value = '';
-                    
-                } else {
-                    throw new Error(data.message || 'Failed to send email');
-                }
-                
-            } catch (error) {
-                console.error('❌ Error sending magic link:', error);
-                showStatus('Error: ' + error.message, 'error');
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
-            }
+        // // Magic Link Form Handler
+document.getElementById('magicLinkForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value.trim();
+    const sendBtn = document.getElementById('sendLinkBtn');
+    
+    if (!email) {
+        showStatus('Please enter your email address.', 'error');
+        return;
+    }
+    
+    // Disable button and show loading state
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending Magic Link...';
+    
+    try {
+        // Generate unique token
+        const token = generateToken();
+        
+        // Store email and token for verification
+        localStorage.setItem('pendingEmail', email);
+        localStorage.setItem('pendingToken', token);
+        
+        console.log('📧 Sending magic link to:', email);
+        
+        // This calls your Netlify function, which uses Resend
+        const response = await fetch('/.netlify/functions/send-magic-link', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, token })
         });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            console.log('✅ Magic link sent successfully');
+            
+            showStatus('Magic link sent! Check your email and click the link to sign in.', 'success');
+            sendBtn.innerHTML = '<i class="fas fa-check"></i> Link Sent!';
+            
+            // Clear form
+            document.getElementById('email').value = '';
+            
+        } else {
+            throw new Error(data.error || 'Failed to send magic link');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error sending magic link:', error);
+        showStatus('Error: ' + error.message, 'error');
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
+    }
+});
 
         // Check if we have a token in URL (for magic link verification)
         function checkMagicLink() {
