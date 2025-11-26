@@ -1,3 +1,5 @@
+const https = require('https');
+
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return {
@@ -25,26 +27,48 @@ exports.handler = async (event) => {
 
     const magicLink = `https://loxerabackend.netlify.app/dashboard.html?token=${token}&email=${encodeURIComponent(email)}`;
 
-    // Use Resend API directly with fetch
-    const response = await fetch('https://api.resend.com/emails', {
+    // Use https module instead of fetch
+    const emailData = JSON.stringify({
+      from: 'Lexora <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Your Magic Login Link',
+      html: `Click here to login: <a href="${magicLink}">${magicLink}</a>`
+    });
+
+    const options = {
+      hostname: 'api.resend.com',
+      port: 443,
+      path: '/emails',
       method: 'POST',
       headers: {
         'Authorization': 'Bearer re_29BgFua3_LML05TyH1X1f59bJb8p6YsWH',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'Lexora <onboarding@resend.dev>',
-        to: [email],
-        subject: 'Your Magic Login Link',
-        html: `Click here to login: <a href="${magicLink}">${magicLink}</a>`
-      }),
+        'Content-Length': emailData.length
+      }
+    };
+
+    // Make the API request
+    const result = await new Promise((resolve, reject) => {
+      const req = https.request(options, (res) => {
+        let data = '';
+        
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+        
+        res.on('end', () => {
+          if (res.statusCode >= 200 && res.statusCode < 300) {
+            resolve(JSON.parse(data));
+          } else {
+            reject(new Error(`HTTP ${res.statusCode}: ${data}`));
+          }
+        });
+      });
+      
+      req.on('error', reject);
+      req.write(emailData);
+      req.end();
     });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      throw new Error(result.message || 'Failed to send email');
-    }
 
     return {
       statusCode: 200,
