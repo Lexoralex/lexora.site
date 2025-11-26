@@ -1,8 +1,8 @@
 exports.handler = async (event) => {
   if (event.httpMethod !== 'POST') {
-    return { 
-      statusCode: 405, 
-      body: JSON.stringify({ error: 'Method not allowed' }) 
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
@@ -10,16 +10,16 @@ exports.handler = async (event) => {
     const { email, token } = JSON.parse(event.body);
     
     if (!email) {
-      return { 
-        statusCode: 400, 
-        body: JSON.stringify({ error: 'Email is required' }) 
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Email is required' })
       };
     }
 
     if (!token) {
-      return { 
-        statusCode: 400, 
-        body: JSON.stringify({ error: 'Token is required' }) 
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Token is required' })
       };
     }
 
