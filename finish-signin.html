@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Finish Sign In</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 40px;
+      text-align: center;
+      background: #f8f9fa;
+      color: #333;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Finishing sign in...</h1>
+  <p id="status">Please wait...</p>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
+      authDomain: "lexorasite.firebaseapp.com",
+      projectId: "lexorasite",
+      storageBucket: "lexorasite.firebasestorage.app",
+      messagingSenderId: "547338465904",
+      appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+      measurementId: "G-X3RBR8FKXL"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    const url = window.location.href;
+    const status = document.getElementById('status');
+
+    if (auth.isSignInWithEmailLink(url)) {
+      let email = window.localStorage.getItem('emailForSignIn');
+      if (!email) {
+        email = window.prompt('Please confirm your email for sign-in:');
+      }
+
+      auth.signInWithEmailLink(email, url)
+        .then((result) => {
+          window.localStorage.removeItem('emailForSignIn');
+          status.textContent = 'Success! You are now signed in.';
+          // Optional: redirect user to your dashboard or homepage
+          // window.location.href = "dashboard.html";
+        })
+        .catch((error) => {
+          console.error('Error finishing sign-in:', error);
+          status.textContent = 'Error: ' + error.message;
+        });
+    } else {
+      status.textContent = 'This link is not valid for sign-in.';
+    }
+  </script>
+</body>
+</html>
