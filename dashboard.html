@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard - Lexora</title>
     <style>
         * {
@@ -134,14 +134,14 @@
     <!-- Loading State -->
     <div class="loading" id="loading">
         <div class="loading-spinner"></div>
-        <p>Signing you in...</p>
+        <p>Checking authentication...</p>
     </div>
 
     <!-- Error State -->
     <div class="error" id="error" style="display: none;">
         <h2>Authentication Failed</h2>
         <p id="errorMessage"></p>
-        <a href="login.html" class="login-link">Return to Login</a>
+        <a href="index.html" class="login-link">Return to Login</a>
     </div>
 
     <!-- Dashboard Content -->
@@ -152,7 +152,7 @@
             </div>
             <div class="user-info">
                 <span class="user-email" id="userEmail"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+                <button class="logout-btn" id="logoutBtn">Logout</button>
             </div>
         </div>
         
@@ -179,81 +179,63 @@
         </div>
     </div>
 
-    <!-- Firebase Auth Only -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 
     <script>
-        // Firebase Configuration
+        // Firebase configuration - keep consistent with your other pages
         const firebaseConfig = {
-            apiKey: "AIzaSyAhuZ-9s6Atgl884ijz0joDrW3bznODHg8",
+            apiKey: "AIzaSyAhuZ-9s6Atgl804ijzOjoDrW3bznODHg0",
             authDomain: "lexorasite.firebaseapp.com",
             projectId: "lexorasite",
-            storageBucket: "lexorasite.appspot.com",
+            storageBucket: "lexorasite.firebasestorage.app",
             messagingSenderId: "547338465904",
-            appId: "1:547338465904:web:4422d092dc100712fdbab5"
+            appId: "1:547338465904:web:28a41ac22e86c593fdbab5",
+            measurementId: "G-X3RBR8FKXL"
         };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // Check for magic link token in URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        const email = urlParams.get('email');
+        // Select elements
+        const loadingEl = document.getElementById('loading');
+        const errorEl = document.getElementById('error');
+        const dashboardEl = document.getElementById('dashboard');
+        const userEmailEl = document.getElementById('userEmail');
+        const errorMessageEl = document.getElementById('errorMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
 
-        if (token && email) {
-            // Auto-login with magic link token
-            auth.signInWithCustomToken(token)
-                .then((userCredential) => {
-                    console.log('User logged in:', userCredential.user);
-                    
-                    // Show dashboard content
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('dashboard').style.display = 'block';
-                    document.getElementById('userEmail').textContent = email;
-                    
-                    // Clean URL (remove token from address bar)
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                })
-                .catch((error) => {
-                    console.error('Login error:', error);
-                    showError('Invalid or expired magic link. Please request a new one.');
-                });
-        } else {
-            // Check if user is already logged in
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    // User is signed in
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('dashboard').style.display = 'block';
-                    document.getElementById('userEmail').textContent = user.email;
-                } else {
-                    // No user signed in and no token
-                    showError('No authentication token found. Please login first.');
-                }
-            });
-        }
-
+        // Show error helper function
         function showError(message) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'block';
-            document.getElementById('errorMessage').textContent = message;
+            loadingEl.style.display = 'none';
+            dashboardEl.style.display = 'none';
+            errorEl.style.display = 'block';
+            errorMessageEl.textContent = message;
         }
 
-        function logout() {
+        // Logout handler
+        logoutBtn.addEventListener('click', () => {
             auth.signOut().then(() => {
-                window.location.href = 'login.html';
+                window.location.href = 'index.html'; // Redirect to login page
             });
-        }
+        });
 
-        // Listen for auth state changes
-        auth.onAuthStateChanged((user) => {
-            if (!user && !token) {
-                showError('Please login to access the dashboard.');
+        // Check authentication state on page load
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is signed in: show dashboard
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'none';
+                dashboardEl.style.display = 'block';
+                userEmailEl.textContent = user.email || 'Unknown Email';
+            } else {
+                // Not signed in: show error and prompt to login
+                showError('You are not signed in. Please login first.');
             }
         });
+
     </script>
+
 </body>
 </html>
