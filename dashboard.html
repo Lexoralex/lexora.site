@@ -4,636 +4,255 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Lexora</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
-
-        :root {
-            --primary: #f9d301;
-            --dark: #212529;
-            --light: #f8f9fa;
-            --sidebar: #2c3e50;
-        }
-
+        
         body {
-            background: #ecf0f1;
-            display: flex;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-
-        .sidebar {
-            background: var(--sidebar);
-            color: white;
-            width: 250px;
-            padding: 2rem 0;
-            position: fixed;
-            height: 100vh;
+        
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-
-        .logo {
-            padding: 0 1.5rem 2rem;
-            border-bottom: 1px solid #34495e;
-            margin-bottom: 1rem;
-        }
-
-        .logo a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .nav-links {
-            list-style: none;
-        }
-
-        .nav-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .nav-links a {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.5rem;
-            color: #bdc3c7;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-
-        .nav-links a:hover {
-            background: #34495e;
-            color: white;
-            border-left: 4px solid var(--primary);
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 2rem;
-        }
-
-        .top-bar {
+        
+        .header {
             background: white;
-            padding: 1rem 2rem;
+            padding: 20px 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
             display: flex;
-            justify-content: space-between;
+            justify-content: between;
             align-items: center;
-            margin-bottom: 2rem;
         }
-
+        
+        .logo h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        
         .user-info {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 15px;
         }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--dark);
-            font-weight: bold;
-        }
-
-        .logout-btn {
-            background: #e74c3c;
+        
+        .user-email {
+            background: #667eea;
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background: #ff4757;
+            color: white;
             border: none;
+            padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
+            font-weight: 500;
         }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        
+        .logout-btn:hover {
+            background: #ff3742;
         }
-
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .stat-card.primary {
-            background: linear-gradient(135deg, var(--primary), #f9c301);
-            color: var(--dark);
-        }
-
-        .stat-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
-
-        .tasks-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .tasks-grid {
+        
+        .content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            gap: 20px;
         }
-
-        .task-card {
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            padding: 1.5rem;
-            transition: transform 0.3s;
-        }
-
-        .task-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .task-title {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .task-amount {
-            background: var(--primary);
-            color: var(--dark);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-
-        .start-task {
-            background: var(--primary);
-            color: var(--dark);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        
+        .card {
             background: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-
+        
+        .card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+        
         .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary);
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
             border-radius: 50%;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
+            margin: 0 auto 20px;
         }
-
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-
-        .email-prompt {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .email-prompt-box {
-            background: white;
-            padding: 2rem;
+        
+        .error {
+            background: #ff4757;
+            color: white;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             text-align: center;
-            max-width: 400px;
-            width: 90%;
+            margin: 50px auto;
+            max-width: 500px;
         }
-
-        .email-prompt input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: 5px;
-            margin: 1rem 0;
-            font-size: 1rem;
-        }
-
-        .email-prompt button {
-            background: var(--primary);
-            color: var(--dark);
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 5px;
-            font-weight: 600;
-            cursor: pointer;
-            margin: 0 0.5rem;
-        }
-
-        .error-message {
-            background: #f8d7da;
-            color: #721c24;
-            padding: 1rem;
-            border-radius: 5px;
-            margin: 1rem 0;
-            text-align: center;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 1rem;
-            border-radius: 5px;
-            margin: 1rem 0;
-            text-align: center;
+        
+        .login-link {
+            color: white;
+            text-decoration: underline;
+            margin-top: 10px;
+            display: inline-block;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loading-screen" id="loadingScreen">
+    <!-- Loading State -->
+    <div class="loading" id="loading">
         <div class="loading-spinner"></div>
-        <p id="loadingText">Checking authentication...</p>
+        <p>Signing you in...</p>
     </div>
 
-    <!-- Email Prompt -->
-    <div class="email-prompt" id="emailPrompt" style="display: none;">
-        <div class="email-prompt-box">
-            <h3>Authentication Required</h3>
-            <p>Please enter your email address to continue:</p>
-            <input type="email" id="confirmEmail" placeholder="Enter your email address">
-            <div id="emailError" class="error-message" style="display: none;"></div>
-            <div style="margin-top: 1rem;">
-                <button onclick="verifyEmail()">Continue</button>
-                <button onclick="redirectToHome()" style="background: #6c757d; color: white;">Get New Link</button>
+    <!-- Error State -->
+    <div class="error" id="error" style="display: none;">
+        <h2>Authentication Failed</h2>
+        <p id="errorMessage"></p>
+        <a href="login.html" class="login-link">Return to Login</a>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-container" id="dashboard" style="display: none;">
+        <div class="header">
+            <div class="logo">
+                <h1>Lexora Dashboard</h1>
             </div>
-        </div>
-    </div>
-
-    <!-- Sidebar -->
-    <nav class="sidebar" style="display: none;" id="sidebar">
-        <div class="logo">
-            <a href="index.html">
-                <i class="fas fa-coins"></i>
-                LEXORA
-            </a>
-        </div>
-
-        <ul class="nav-links">
-            <li><a href="dashboard.html" class="active">
-                <i class="fas fa-home"></i> Dashboard
-            </a></li>
-            <li><a href="tasks.html">
-                <i class="fas fa-tasks"></i> Available Tasks
-            </a></li>
-            <li><a href="earnings.html">
-                <i class="fas fa-dollar-sign"></i> My Earnings
-            </a></li>
-            <li><a href="withdraw.html">
-                <i class="fas fa-wallet"></i> Withdraw Funds
-            </a></li>
-        </ul>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="main-content" style="display: none;" id="mainContent">
-        <!-- Top Bar -->
-        <div class="top-bar">
             <div class="user-info">
-                <div class="user-avatar" id="userAvatar">U</div>
-                <div>
-                    <div style="font-weight: 600;" id="userEmail">Loading...</div>
-                    <div style="font-size: 0.8rem; color: #666;">Member</div>
-                </div>
-            </div>
-            <button class="logout-btn" id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card primary">
-                <div class="stat-icon">
-                    <i class="fas fa-wallet"></i>
-                </div>
-                <div class="stat-number">$0.00</div>
-                <div class="stat-label">Available Balance</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="stat-number">0</div>
-                <div class="stat-label">Tasks Completed</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fas fa-bullseye"></i>
-                </div>
-                <div class="stat-number">5</div>
-                <div class="stat-label">Available Tasks</div>
+                <span class="user-email" id="userEmail"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </div>
-
-        <!-- Available Tasks -->
-        <section class="tasks-section">
-            <h2>Available Tasks</h2>
-            <div class="tasks-grid">
-                <div class="task-card">
-                    <div class="task-header">
-                        <div>
-                            <div class="task-title">Quick Survey - Shopping Habits</div>
-                            <div style="color: #666; font-size: 0.9rem;">5-minute survey about your shopping preferences</div>
-                        </div>
-                        <div class="task-amount">$1.50</div>
-                    </div>
-                    <button class="start-task">Start Survey</button>
-                </div>
-
-                <div class="task-card">
-                    <div class="task-header">
-                        <div>
-                            <div class="task-title">Watch Ad - Tech Product</div>
-                            <div style="color: #666; font-size: 0.9rem;">Watch a 2-minute video advertisement</div>
-                        </div>
-                        <div class="task-amount">$0.75</div>
-                    </div>
-                    <button class="start-task">Watch Ad</button>
-                </div>
-
-                <div class="task-card">
-                    <div class="task-header">
-                        <div>
-                            <div class="task-title">Product Review - Mobile App</div>
-                            <div style="color: #666; font-size: 0.9rem;">Test and review a new mobile application</div>
-                        </div>
-                        <div class="task-amount">$3.00</div>
-                    </div>
-                    <button class="start-task">Start Review</button>
-                </div>
+        
+        <div class="content">
+            <div class="card">
+                <h2>Welcome Back! 👋</h2>
+                <p>You have successfully logged in using the magic link authentication system.</p>
             </div>
-        </section>
+            
+            <div class="card">
+                <h2>Your Content</h2>
+                <p>Manage your articles, videos, and other content here.</p>
+            </div>
+            
+            <div class="card">
+                <h2>Earnings</h2>
+                <p>Track your revenue and payments from your content.</p>
+            </div>
+            
+            <div class="card">
+                <h2>Analytics</h2>
+                <p>View performance metrics for your content.</p>
+            </div>
+        </div>
     </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
 
     <script>
-        // Show dashboard content
-        function showDashboard(userEmail) {
-            document.getElementById('userEmail').textContent = userEmail;
-            document.getElementById('userAvatar').textContent = userEmail.charAt(0).toUpperCase();
-            
-            // Store user session
-            localStorage.setItem('lexora_user', userEmail);
-            localStorage.setItem('lexora_loggedIn', 'true');
-            
-            // Hide loading screen, show dashboard
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('sidebar').style.display = 'block';
-            document.getElementById('mainContent').style.display = 'block';
-        }
+        // Firebase Configuration - SAME AS login.html
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "lexorasite.firebaseapp.com",
+            projectId: "lexorasite",
+            storageBucket: "lexorasite.appspot.com",
+            messagingSenderId: "547338465904",
+            appId: "YOUR_APP_ID_HERE"
+        };
 
-        // Show error message
-        function showError(message) {
-            const errorEl = document.getElementById('emailError');
-            errorEl.textContent = message;
-            errorEl.style.display = 'block';
-        }
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
-        // Hide error message
-        function hideError() {
-            document.getElementById('emailError').style.display = 'none';
-        }
+        // Check for magic link token in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const email = urlParams.get('email');
 
-        // Verify email from magic link
-        function verifyEmail() {
-            const email = document.getElementById('confirmEmail').value.trim();
-            if (!email) {
-                showError('Please enter your email address');
-                return;
-            }
-
-            hideError();
-            document.getElementById('emailPrompt').style.display = 'none';
-            document.getElementById('loadingScreen').style.display = 'flex';
-            document.getElementById('loadingText').textContent = 'Verifying your email...';
-
-            // Check if this email matches the magic link token
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            const linkEmail = urlParams.get('email');
-
-            if (token && linkEmail) {
-                // Verify token matches stored token
-                const storedToken = localStorage.getItem('pendingToken');
-                const storedEmail = localStorage.getItem('pendingEmail');
-
-                if (token === storedToken && email === storedEmail && email === linkEmail) {
-                    // Successful verification
-                    setTimeout(() => {
-                        // Clean URL - remove magic link parameters
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        
-                        // Clear pending data
-                        localStorage.removeItem('pendingToken');
-                        localStorage.removeItem('pendingEmail');
-                        
-                        showDashboard(email);
-                    }, 1000);
-                } else {
-                    // Invalid token or email mismatch
-                    setTimeout(() => {
-                        showError('Invalid magic link. Please request a new one.');
-                        document.getElementById('loadingScreen').style.display = 'none';
-                        document.getElementById('emailPrompt').style.display = 'flex';
-                    }, 1000);
-                }
-            } else {
-                // No token in URL, check existing session
-                checkExistingSession(email);
-            }
-        }
-
-        // Check existing user session
-        function checkExistingSession(email) {
-            const existingUser = localStorage.getItem('lexora_user');
-            if (existingUser === email) {
-                // User already has a valid session
-                setTimeout(() => {
-                    showDashboard(email);
-                }, 1000);
-            } else {
-                // No valid session
-                setTimeout(() => {
-                    showError('No valid session found. Please request a new magic link.');
-                    document.getElementById('loadingScreen').style.display = 'none';
-                    document.getElementById('emailPrompt').style.display = 'flex';
-                }, 1000);
-            }
-        }
-
-        // Redirect to homepage
-        function redirectToHome() {
-            window.location.href = 'index.html';
-        }
-
-        // Handle magic link authentication
-        function handleMagicLinkAuth() {
-            console.log('🔗 Checking for magic link authentication...');
-            
-            const urlParams = new URLSearchParams(window.location.search);
-            const token = urlParams.get('token');
-            const email = urlParams.get('email');
-
-            if (token && email) {
-                console.log('✅ Magic link detected');
-                
-                // Check if token matches stored token
-                const storedToken = localStorage.getItem('pendingToken');
-                const storedEmail = localStorage.getItem('pendingEmail');
-
-                if (token === storedToken && email === storedEmail) {
-                    console.log('✅ Token verification successful');
+        if (token && email) {
+            // Auto-login with magic link token
+            auth.signInWithCustomToken(token)
+                .then((userCredential) => {
+                    console.log('User logged in:', userCredential.user);
                     
-                    // Auto-login user
-                    document.getElementById('loadingScreen').style.display = 'flex';
-                    document.getElementById('loadingText').textContent = 'Signing you in...';
+                    // Show dashboard content
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('userEmail').textContent = email;
                     
-                    setTimeout(() => {
-                        // Clean URL
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                        
-                        // Clear pending data
-                        localStorage.removeItem('pendingToken');
-                        localStorage.removeItem('pendingEmail');
-                        
-                        showDashboard(email);
-                    }, 1500);
+                    // Clean URL (remove token from address bar)
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                })
+                .catch((error) => {
+                    console.error('Login error:', error);
+                    showError('Invalid or expired magic link. Please request a new one.');
+                });
+        } else {
+            // Check if user is already logged in
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    // User is signed in
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('userEmail').textContent = user.email;
                 } else {
-                    console.log('❌ Token verification failed');
-                    // Show email prompt for manual verification
-                    document.getElementById('emailPrompt').style.display = 'flex';
-                    document.getElementById('confirmEmail').value = email;
-                    document.getElementById('loadingScreen').style.display = 'none';
+                    // No user signed in and no token
+                    showError('No authentication token found. Please login first.');
                 }
-            } else {
-                console.log('🔍 No magic link found, checking existing session');
-                checkExistingUser();
-            }
-        }
-
-        // Check for existing logged-in user
-        function checkExistingUser() {
-            const isLoggedIn = localStorage.getItem('lexora_loggedIn');
-            const userEmail = localStorage.getItem('lexora_user');
-
-            if (isLoggedIn === 'true' && userEmail) {
-                console.log('✅ User already logged in:', userEmail);
-                showDashboard(userEmail);
-            } else {
-                console.log('❌ No valid session found');
-                // Show email prompt
-                document.getElementById('loadingScreen').style.display = 'none';
-                document.getElementById('emailPrompt').style.display = 'flex';
-            }
-        }
-
-        // Logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            // Clear all user data
-            localStorage.removeItem('lexora_user');
-            localStorage.removeItem('lexora_loggedIn');
-            localStorage.removeItem('pendingToken');
-            localStorage.removeItem('pendingEmail');
-            
-            // Redirect to homepage
-            window.location.href = 'index.html';
-        });
-
-        // Task completion handlers
-        document.querySelectorAll('.start-task').forEach(button => {
-            button.addEventListener('click', function() {
-                const taskAmount = this.closest('.task-card').querySelector('.task-amount').textContent;
-                const taskTitle = this.closest('.task-card').querySelector('.task-title').textContent;
-                
-                this.textContent = 'Completed!';
-                this.style.background = '#27ae60';
-                this.style.color = 'white';
-                this.disabled = true;
-                
-                // Update completed tasks count
-                const completedTasksEl = document.querySelector('.stat-card:nth-child(2) .stat-number');
-                const currentCount = parseInt(completedTasksEl.textContent);
-                completedTasksEl.textContent = currentCount + 1;
-                
-                // Update available tasks count
-                const availableTasksEl = document.querySelector('.stat-card:nth-child(3) .stat-number');
-                const availableCount = parseInt(availableTasksEl.textContent);
-                availableTasksEl.textContent = availableCount - 1;
-                
-                alert(`Task "${taskTitle}" completed! ${taskAmount} will be added to your balance.`);
             });
-        });
+        }
 
-        // Start authentication process when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            handleMagicLinkAuth();
-        });
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('errorMessage').textContent = message;
+        }
 
-        // Prevent access if no valid session
-        window.addEventListener('beforeunload', function() {
-            // Optional: Add any cleanup logic here
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        }
+
+        // Listen for auth state changes
+        auth.onAuthStateChanged((user) => {
+            if (!user && !token) {
+                showError('Please login to access the dashboard.');
+            }
         });
     </script>
 </body>
