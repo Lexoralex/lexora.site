@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lexora - Get Paid for Surveys & Ads</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -10,72 +10,233 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             line-height: 1.6; 
-            color: #333; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            min-height: 100vh;
+            color: #333;
         }
-        .header { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 1rem 0; }
-        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { color: white; font-size: 1.8rem; font-weight: bold; text-decoration: none; }
-        .nav-menu { display: flex; gap: 2rem; }
-        .nav-link { color: white; text-decoration: none; font-weight: 500; }
-        .hamburger { display: none; flex-direction: column; cursor: pointer; }
-        .bar { width: 25px; height: 3px; background: white; margin: 3px 0; transition: 0.3s; }
-        .main { max-width: 1200px; margin: 4rem auto; padding: 0 2rem; text-align: center; color: white; }
-        .hero h1 { font-size: 3.5rem; margin-bottom: 1rem; }
-        .hero p { font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.9; }
-        .magic-form { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 2.5rem; border-radius: 20px; max-width: 500px; margin: 0 auto; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group input { width: 100%; padding: 1rem 1.5rem; border: none; border-radius: 50px; font-size: 1.1rem; background: rgba(255,255,255,0.9); }
-        #sendLinkBtn { width: 100%; padding: 1.2rem; background: linear-gradient(45deg, #ff6b6b, #feca57); border: none; border-radius: 50px; color: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: transform 0.3s; }
-        #sendLinkBtn:hover { transform: scale(1.05); }
-        #status { margin-top: 1rem; padding: 1rem; border-radius: 10px; }
-        .status-success { background: rgba(46,204,113,0.3); color: #2ecc71; }
-        .status-error { background: rgba(231,76,60,0.3); color: #e74c3c; }
+        
+        /* Header with white background like your About page */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Yellow LEXORA logo like your site */
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffc107;
+            text-decoration: none;
+        }
+        
+        .nav-logo i { color: #ffc107; }
+        
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+        
+        .nav-link:hover { color: #ffc107; }
+        .nav-link.active { color: #ffc107; font-weight: 600; }
+        
+        .login-btn {
+            background: #ffc107;
+            color: #333;
+            padding: 0.7rem 2rem;
+            border-radius: 25px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .login-btn:hover { transform: scale(1.05); }
+        
+        /* Hero section with gradient like your current index */
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-section h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .hero-section p {
+            font-size: 1.3rem;
+            margin-bottom: 3rem;
+            opacity: 0.95;
+        }
+        
+        /* Magic link form */
+        .magic-form-container {
+            max-width: 550px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.95);
+            outline: none;
+        }
+        
+        .magic-link-btn {
+            width: 100%;
+            padding: 1.3rem;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .magic-link-btn:hover { transform: scale(1.05); }
+        .magic-link-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+        
+        #status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .status-success {
+            background: rgba(46,204,113,0.3);
+            color: #2ecc71;
+        }
+        
+        .status-error {
+            background: rgba(231,76,60,0.3);
+            color: #e74c3c;
+        }
+        
+        /* Mobile hamburger menu */
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        
+        .mobile-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+        
         @media (max-width: 768px) {
-            .hamburger { display: flex; }
-            .nav-menu { position: fixed; top: 70px; left: -100%; width: 100%; height: calc(100vh - 70px); background: rgba(0,0,0,0.95); flex-direction: column; justify-content: flex-start; align-items: center; padding-top: 2rem; transition: 0.3s; }
-            .nav-menu.active { left: 0; }
-            .hero h1 { font-size: 2.5rem; }
+            .mobile-toggle { display: flex; }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: white;
+                flex-direction: column;
+                justify-content: flex-start;
+                padding-top: 2rem;
+                transition: 0.3s;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            }
+            
+            .nav-links.active { left: 0; }
+            
+            .hero-section h1 { font-size: 2.5rem; }
+            .hero-section p { font-size: 1.1rem; }
         }
     </style>
 </head>
 <body>
+    <!-- Header matching your About Us page style -->
     <header class="header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <a href="index.html" class="nav-logo">Lexora</a>
-                <div class="nav-menu" id="nav-menu">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="dashboard.html" class="nav-link">Dashboard</a>
-                </div>
-                <div class="hamburger" id="hamburger">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
+        <nav class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-coins"></i> LEXORA
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="how-it-works.html" class="nav-link">How It Works</a>
+                <a href="earning-plans.html" class="nav-link">Earning Plans</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <button class="login-btn" onclick="document.getElementById('emailInput').focus()">Login</button>
+            </div>
+            <div class="mobile-toggle" id="mobileToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </nav>
     </header>
 
-    <main class="main">
-        <div class="hero">
-            <h1>Get Paid for Surveys & Ads</h1>
-            <p>Complete simple tasks and earn money instantly. No skills required!</p>
-        </div>
+    <!-- Hero section with magic link form -->
+    <section class="hero-section">
+        <h1>Get Paid for Surveys & Ads</h1>
+        <p>Complete simple tasks and earn money instantly. No skills required!</p>
         
-        <div class="magic-form">
-            <form id="magicForm" class="form-group">
+        <div class="magic-form-container">
+            <form id="magicForm">
                 <div class="form-group">
                     <input type="email" id="emailInput" placeholder="Enter your email to get started" required>
                 </div>
-                <button type="submit" id="sendLinkBtn">
-                    <i class="fas fa-magic"></i> Send Magic Link
+                <button type="submit" class="magic-link-btn" id="sendLinkBtn">
+                    <i class="fas fa-paper-plane"></i> Send Magic Link
                 </button>
                 <div id="status"></div>
             </form>
         </div>
-    </main>
+    </section>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js';
@@ -108,8 +269,6 @@
             e.preventDefault();
             const email = emailInput.value.trim();
             
-            if (!email) return;
-            
             sendLinkBtn.disabled = true;
             sendLinkBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             
@@ -121,23 +280,23 @@
             try {
                 await sendSignInLinkToEmail(auth, email, actionCodeSettings);
                 localStorage.setItem('emailForSignIn', email);
-                showStatus('Magic link sent! Check your email.', 'success');
+                showStatus('✓ Magic link sent! Check your email.', 'success');
+                emailInput.value = '';
             } catch (error) {
                 console.error(error);
                 showStatus('Error: ' + error.message, 'error');
             } finally {
                 sendLinkBtn.disabled = false;
-                sendLinkBtn.innerHTML = '<i class="fas fa-magic"></i> Send Magic Link';
+                sendLinkBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Magic Link';
             }
         });
         
-        // Mobile menu
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('nav-menu');
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
         
-        hamburger.addEventListener('click', () => {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
         });
     </script>
 </body>
