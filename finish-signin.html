@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Finish Sign In</title>
+  <title>Finish Sign In - Lexora</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,10 +11,13 @@
       background: #f8f9fa;
       color: #333;
     }
+    h1 {
+      margin-bottom: 10px;
+    }
     #status {
       margin-top: 20px;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
   </style>
 </head>
@@ -22,6 +25,7 @@
   <h1>Finishing sign in...</h1>
   <p id="status">Please wait...</p>
 
+  <!-- Firebase compat SDK (same version family as dashboard) -->
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.0/firebase-auth-compat.js"></script>
 
@@ -51,9 +55,12 @@
       auth.signInWithEmailLink(email, url)
         .then((result) => {
           window.localStorage.removeItem('emailForSignIn');
-          status.textContent = 'Success! You are now signed in.';
-          // Optional: redirect user to your dashboard or homepage
-          // window.location.href = "dashboard.html";
+          status.textContent = 'Success! You are now signed in. Redirecting to your dashboard...';
+
+          // Redirect to dashboard after a short delay
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 1500);
         })
         .catch((error) => {
           console.error('Error finishing sign-in:', error);
