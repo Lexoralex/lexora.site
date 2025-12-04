@@ -409,15 +409,7 @@
 </button>
 
                     <!-- Hidden Adsterra area -->
-<div id="adsterraZone" style="margin-top:1rem; display:none;">
-  <p style="font-size:0.9rem;color:#666;margin-bottom:0.5rem;">
-    Ad is loading... please wait and do not close this window.
-  </p>
-  <script
-    type="text/javascript"
-    src="//pl28188477.effectivegatecpm.com/25/3f/5a/253f5a456428803109db93f7918a8efe.js">
-  </script>
-</div>
+<div id="adsterraZone" style="margin-top:1rem; display:none;"></div> 
 
                     <button class="quick-btn surveys" onclick="openExternal('SURVEYS')">
                         <i class="fas fa-clipboard-list"></i> Take Surveys
@@ -543,10 +535,20 @@
                 window.open('https://example-mini-tasks.com', '_blank');
             }
         }
-        function showAdsterraAd() {
+       function showAdsterraAd() {
   const zone = document.getElementById('adsterraZone');
   zone.style.display = 'block';
+
+  // only add the script once
+  if (!zone.dataset.loaded) {
+    const s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = '//pl28188477.effectivegatecpm.com/25/3f/5a/253f5a456428803109db93f7918a8efe.js';
+    zone.appendChild(s);
+    zone.dataset.loaded = 'true';
+  }
 }
+
     </script>
 </body>
 </html>
